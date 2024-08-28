@@ -1,0 +1,24 @@
+.swiper {
+  width: 100%;
+  max-height: 500px;
+  --swiper-pagination-bullet-inactive-color: var(--light-300);
+  --swiper-pagination-bullet-inactive-opacity: 1;
+}
+
+.slider__img img {
+  width: 100%;
+  max-height: 300px;
+}
+.swiper__pagination {
+  margin-top: 25px;
+  position: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.swiper__activeBullet {
+  --swiper-pagination-bullet-size: 14px;
+  background-color: var(--highlight-color);
+}

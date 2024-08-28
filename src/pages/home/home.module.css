@@ -1,0 +1,45 @@
+.home {
+    width: 100%;
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.home__carrousel {
+    min-height: 200px;
+    max-height: 780px;
+}
+
+.home__brands {
+    min-height: 500px;
+    max-height: 760px;
+    margin: 0 auto;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: var(--transition-opacity);
+}
+.home__certification{
+    min-height: 500px;
+    max-height: 760px;
+    opacity: 0;
+    transition: var(--transition-opacity);
+}
+.home__achievements{
+    min-height: 300px;
+    max-height: 760px;
+    opacity: 0;
+    transition: var(--transition-opacity);
+}
+.home__manufacturing{
+    min-height: 200px;
+    max-height: 760px;
+    opacity: 0;
+    transition: var(--transition-opacity);
+}
+.visible {
+    opacity: 1;
+}

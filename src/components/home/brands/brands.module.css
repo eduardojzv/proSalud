@@ -1,0 +1,24 @@
+.brands__container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.visit{
+    color: var(--light-100);
+    
+    text-align: center;
+    padding: 10px;
+    border-radius: 20px;
+    width: 50%;
+    height: 100%;
+    font-size: var(--text-base);
+    transition: transform 0.3s;
+    background-color: var( --highlight-color);
+}
+
+.visit:hover{
+    transform: scale(1.1);
+}
