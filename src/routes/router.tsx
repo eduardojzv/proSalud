@@ -8,6 +8,7 @@ import Loading from "../components/others/loading/loading";
 const Home = lazy(() => import('../pages/home/home'))
 const OurWork = lazy(() => import('../pages/ourWork/ourWork'))
 const OurBrands = lazy(() => import('../pages/ourBrands/ourBrands'))
+const WorkWithUs = lazy(() => import('../pages/workWithUs/workWithUs'))
 export const router = createBrowserRouter([
     {
         path: "/",
@@ -31,6 +32,12 @@ export const router = createBrowserRouter([
                 path: menuItems.items.ourBrands.href,
                 element: <Suspense fallback={<Loading/>} >
                     <OurBrands/>
+                </Suspense>
+            },
+            {
+                path: menuItems.items.workWithUs.href,
+                element: <Suspense fallback={<Loading/>} >
+                    <WorkWithUs/>
                 </Suspense>
             },
         ]

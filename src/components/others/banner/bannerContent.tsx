@@ -1,7 +1,7 @@
 interface Props {
     title: string
+    text?: string
     banner__content: string
-    text: string
     text__content:string
 }
 export default function BannerContent({ title,banner__content, text,text__content}: Props) {
@@ -9,7 +9,7 @@ export default function BannerContent({ title,banner__content, text,text__conten
         <div className={banner__content}>
             <div className={`${text__content} upperCase`}>
                 <h1>{title}</h1>
-                <p>{text}</p>
+                {text && <p>{text}</p>}
             </div>
         </div>
     )

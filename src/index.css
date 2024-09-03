@@ -26,7 +26,7 @@
     --blue-400: #9171f8;
     /*themes*/
     --primary-background: light-dark(var(--light-100), var(--dark-100));
-    --secondary-background: light-dark(red, var(--dark-200));
+    --secondary-background: light-dark(var(--light-200), var(--dark-200));
     --primary-color: light-dark(var(--dark-100), var(--light-100));
     --highlight-color: light-dark(var(--light-accent), var(--dark-accent));
     /**/
