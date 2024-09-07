@@ -87,6 +87,7 @@ button {
 }
 
 .dropdown__link__title {
+    text-align: left;
     font-weight: 600;
     font-size: var(--text-sm);
 }

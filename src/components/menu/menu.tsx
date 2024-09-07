@@ -43,7 +43,7 @@ export default function Menu() {
                 <div className={nav__start}>
                     <a className={logo} href="/">
                         <img
-                            src="proSaludLogo.png"
+                            src="proSaludLogoBlack.png"
                             width="100%"
                             height="100%"
                             alt="Inc Logo"

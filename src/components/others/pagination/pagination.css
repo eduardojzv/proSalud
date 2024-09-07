@@ -1,0 +1,33 @@
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px; /* Espaciado entre los botones */
+  }
+  
+  .pagination-button {
+    padding: 8px 16px; /* Tamaño del botón */
+    border: 1px solid #e5e7eb; /* Color del borde */
+    border-radius: 4px; /* Borde redondeado */
+    font-size: 0.875rem; /* Tamaño de la fuente */
+    font-weight: 500; /* Peso de la fuente */
+    color: #1f2937; /* Color del texto */
+    background-color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .pagination-button:hover {
+    background-color: #f3f4f6; /* Color de fondo al pasar el ratón */
+  }
+  
+  .pagination-button[disabled] {
+    opacity: 0.5; /* Opacidad cuando está deshabilitado */
+    cursor: not-allowed; /* Cursor cuando está deshabilitado */
+  }
+  
+  .pagination-button.active {
+    background-color: #e5e7eb; /* Color de fondo para el botón activo */
+    color: #374151; /* Color del texto para el botón activo */
+  }
+  

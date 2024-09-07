@@ -1,28 +1,18 @@
-import { Options } from '../../../helpers/interfaces/workWithUs'
+import { fetchLocationsData, fetchPositionsData } from '../../../api/workWithUs/jobsData'
+import Limit from '../../others/limit/limit'
 import MultiSelect from '../../others/multiSelect/multiSelect'
 import styles from './filter.module.css'
-const {filter}=styles
+const { filter, filter__limit, filter__multi__select } = styles
 export default function Filter() {
-  const optionsCities: Options[] = [
-    { value: 'carmen', label: 'Carmen' },
-    { value: 'catedral', label: 'Catedral' },
-    { value: 'el roble', label: 'El Roble' },
-    { value: 'puntarenas', label: 'Puntarenas' },
-    { value: 'quesada', label: 'Quesada' },
-    { value: 'santa ana', label: 'Santa Ana' },
-  
-  ]
-  const optionsPositions: Options[] = [
-    { value: 'administrativos', label: 'Administrativos' },
-    { value: 'operativos', label: 'Operativos' },
-    { value: 'tecnicos', label: 'Técnicos' },
-    { value: 'jefaturas', label: 'Jefaturas' },
-  
-  ]
   return (
     <div className={filter}>
-      <MultiSelect isMulti={true} options={optionsCities}/>
-      <MultiSelect isMulti={false} options={optionsPositions}/>
+      <div className={filter__multi__select}>
+        <MultiSelect isMulti={true} fetchData={fetchLocationsData} filterType={'locations'} />
+        <MultiSelect isMulti={true} fetchData={fetchPositionsData} filterType={'categories'} />
+      </div>
+      <div className={filter__limit}  >
+        <Limit />
+      </div>
     </div>
   )
 }

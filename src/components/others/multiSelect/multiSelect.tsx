@@ -1,46 +1,47 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { IconClose, IconDown } from '../../../icons/others/icons';
 import styles from "./multiSelect.module.css"
-import { Options } from '../../../helpers/interfaces/workWithUs';
-
+import { Filters, Options } from '../../../helpers/interfaces/workWithUs';
+import { useJobStore } from '../../../providers/zustand';
 interface Props {
   isMulti?: boolean;
-  options:Options[]
+  fetchData: () => Promise<Options[]>;
+  filterType:keyof Filters
 }
 
-export default function MultiSelect({ isMulti = false,options }: Props) {
+export default function MultiSelect({ isMulti = false, fetchData ,filterType}: Props) {
+  const { setFilters} = useJobStore();
   const [selectedOptions, setSelectedOptions] = useState<Options[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+  const [options, setOptions] = useState<Options[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const inputRef = useRef<HTMLInputElement>(null)
   const selectRef = useRef<HTMLDivElement>(null)
 
   const toggleOption = (option: Options) => {
-    if (isMulti) {
-      setSelectedOptions(prevSelected => [...prevSelected, option])
-    } else {
-      setSelectedOptions([option])
-    }
-    setSearchTerm('')
-    closeDropdown()
-  }
+    setSelectedOptions(prevSelected => {
+      const updatedSelectedOptions = isMulti
+        ? [...prevSelected, option]
+        : [option];
+      return updatedSelectedOptions;
+    });
+  };
 
   const removeOption = (option: Options) => {
-    setSelectedOptions(prevSelected =>
-      prevSelected.filter(item => item.value !== option.value)
-    )
-  }
+    setSelectedOptions(prevSelected => {
+      const updatedSelectedOptions = prevSelected.filter(item => item.value !== option.value);
+      return updatedSelectedOptions;
+    });
+  };
 
   const closeDropdown = () => {
     setIsOpen(false)
   }
-
-  // const availableOptions = isMulti
-  //   ? options.filter(option => !selectedOptions.some(selected => selected.value === option.value))
-  //   : options
   const availableOptions = options.filter(option => !selectedOptions.some(selected => selected.value === option.value))
   const filteredOptions = availableOptions.filter(option =>
-    option.label.toLowerCase().includes(searchTerm.toLowerCase())
+    option.value.toLowerCase().includes(searchTerm.toLowerCase())
   )
   function handleBodyClick(event: MouseEvent) {
     if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
@@ -48,8 +49,24 @@ export default function MultiSelect({ isMulti = false,options }: Props) {
     }
   }
   useEffect(() => {
+    const filters=selectedOptions.map(opt => opt.value)
+    setFilters({[filterType]:filters})
+  }, [selectedOptions, filterType, setFilters]);
+  useEffect(() => {
+    const optionsData = async () => {
+      try {
+        const data = await fetchData();
+        setOptions(data);
+      } catch (error) {
+        setError((error as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    optionsData();
     document.documentElement.addEventListener('click', handleBodyClick);
     return () => document.documentElement.removeEventListener('click', handleBodyClick);
+
   }, [])
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Escape') {
@@ -66,9 +83,11 @@ export default function MultiSelect({ isMulti = false,options }: Props) {
       setTimeout(() => inputRef.current?.focus(), 0)
     }
   }
-
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
   return (
-    <div className={styles.multiSelectContainer} onKeyDown={handleKeyDown} ref={selectRef} >
+    <div className={styles.multiSelectContainer} onKeyDown={handleKeyDown} ref={selectRef}>
       <div
         className={styles.multiSelectControl}
         onClick={handleControlClick}
@@ -78,46 +97,34 @@ export default function MultiSelect({ isMulti = false,options }: Props) {
         aria-controls="options-listbox"
         tabIndex={0}
       >
-        {selectedOptions.length === 0 ? (
-          <span className={styles.placeholder}>Select options...</span>
-        ) : (
-          isMulti ? (
-            <div className={styles.selectedOptions}>
+        <div className={styles.selectedOptions}>
+          {selectedOptions.length === 0 ? (
+            <span className={styles.placeholder}>Select options...</span>
+          ) : (
+            <>
               {selectedOptions.map(option => (
                 <span key={option.value} className={styles.selectedOption}>
-                  {option.label}
+                  {option.value}
                   <button
                     onClick={(e) => {
                       e.stopPropagation()
                       removeOption(option)
                     }}
-                    aria-label={`Remove ${option.label}`}
+                    aria-label={`Remove ${option.value}`}
                     className={styles.removeButton}
                   >
                     <IconClose width="20px" height="20px" />
                   </button>
                 </span>
               ))}
-            </div>
-          ) : (
-            <span className={styles.selectedOption}>
-              {selectedOptions[0].label}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  removeOption(selectedOptions[0])
-                }}
-                aria-label={`Remove ${selectedOptions[0].label}`}
-                className={styles.removeButton}
-              >
-                <IconClose width="20px" height="20px" />
-              </button>
-
-            </span>
+            </>
           )
-        )}
+          }
+        </div>
         <span className={styles.arrow}>
-          <IconDown aria-hidden={isOpen} className={`${styles.chevron} ${isOpen ? styles.chevron__active : ""}`} />
+          {loading ? <span>Cargando</span> :
+            <IconDown aria-hidden={isOpen} className={`${styles.chevron} ${isOpen ? styles.chevron__active : ""}`} />
+          }
         </span>
       </div>
       {isOpen && (
@@ -148,7 +155,7 @@ export default function MultiSelect({ isMulti = false,options }: Props) {
                   role="option"
                   aria-selected={selectedOptions.some(selected => selected.value === option.value)}
                 >
-                  {option.label}
+                  {option.value}
                 </li>
               ))
             )}

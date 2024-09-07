@@ -1,9 +1,10 @@
 .jobList {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, .5fr));
   gap: 32px;
   width: 90%;
   margin: 0 auto;
+  justify-content: center;
 }
 
 .jobCard {
@@ -11,18 +12,18 @@
   border-radius: 8px;
   overflow: hidden;
   background-color: var(--primary-background);
-  height: fit-content;
   color: var(--title-color);
-  height: 550px;
+  height: 650px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  transition: display 0s ease allow-discrete,scale 0.3s ease;
 }
 
 .jobHeader {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
   padding: 10px;
   height: 20%;
 }
@@ -73,7 +74,7 @@
 }
 
 .job__footer {
-  height: 10%;
+  height: 6%;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -115,12 +116,36 @@
   padding: 3px;
 }
 
-@media (max-width: 624px) {
-  .jobCard{
-    height: 650px;
+.job__no__data {
+  text-align: center;
+  font-size: var(--text-base);
+}
+
+/* .job__visible {
+display: block;
+transform: scale(1);
+}
+
+.job__hidden {
+display: none;
+transform: scale(0);
+} */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 812px) {
+  .jobCard {
+    height: fit-content;
+  }
+
   .jobHeader {
-    height: 30%;
     flex-direction: column;
     align-items: start;
     gap: 10px;

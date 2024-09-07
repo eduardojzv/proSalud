@@ -1,12 +1,12 @@
 .certification {
+    padding: 5px;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
     gap: 10px;
-    min-height: 450px;
+    min-height: 500px;
     max-height: 700px;
-    /* background-color: var(--secondary-background); */
     background-color: rgb(27 127 204 / 25%)
 }
 
@@ -55,7 +55,6 @@
 @media (max-width: 1024px) {
     .certification {
         flex-direction: column;
-        gap: 20px;
     }
 
     .certification__info {

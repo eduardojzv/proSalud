@@ -1,6 +1,5 @@
 export interface Options {
   value: string;
-  label: string;
 }
 // Define la interfaz para una categoría
 interface Category {
@@ -12,7 +11,14 @@ interface Position {
   id: number;
   position: string;
 }
-
+export interface Filters {
+  locations: string[];
+  categories: string[];
+}
+export interface Location{
+    city: string,
+    vacancies: number
+}
 export interface Job {
   id: number;
   descriptions: string[];
@@ -22,7 +28,7 @@ export interface Job {
   category: Category;
   position: Position;
   images: string[];  // Array of image URLs
-  locations: string[];  // Array of location names
+  locations: Location[];  // Array of location names
   department:string;
 }
 

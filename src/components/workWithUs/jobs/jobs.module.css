@@ -13,8 +13,7 @@
 }
 
 .jobs__filter {
-    min-width: 40%;
-    max-width: 70%;
+    width: 90%;
     min-height: 50px;
     max-height: 150px;
     display: flex;

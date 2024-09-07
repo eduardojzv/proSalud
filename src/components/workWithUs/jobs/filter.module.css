@@ -1,7 +1,28 @@
 .filter{
     display: flex;
-    align-items: start;
+    align-items: center;
     justify-content: space-around;
     flex-wrap: wrap;
+    width: 100%;
+    gap: 20px;
+}
+.filter__multi__select{
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.filter__limit{
+    display: flex;
+    flex-direction: row;
     gap: 10px;
+    align-items: center;
+}
+.filter__limit>select{
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    border: 2px solid var(--border-color);
+
 }

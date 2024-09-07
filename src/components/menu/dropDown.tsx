@@ -50,9 +50,7 @@ export default function DropDownMenu({ keys, values, idx, t,handleMenu}: Props) 
                         {Object.entries(values.subLinks).map(([subKey, subVal]) => (
                             <li role="menuitem" key={subKey}>
                                 <NavLink className={dropdown__link} to={subVal.href} onClick={()=>handleMenu(false)}>
-                                    <div>
-                                        <span className={dropdown__link__title}>{subKey}</span>
-                                    </div>
+                                        <span className={dropdown__link__title}>{t(`dropdownItems.aboutUs.subLinks.${subKey as keyof MenuDetailsDropdownItems['aboutUs']['subLinks']}`)}</span>
                                 </NavLink>
                             </li>
                         ))}
