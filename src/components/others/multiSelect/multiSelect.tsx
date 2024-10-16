@@ -3,14 +3,15 @@ import { IconClose, IconDown } from '../../../icons/others/icons';
 import styles from "./multiSelect.module.css"
 import { Filters, Options } from '../../../helpers/interfaces/workWithUs';
 import { useJobStore } from '../../../providers/zustand';
+import { useSearchParams } from 'react-router-dom';
 interface Props {
   isMulti?: boolean;
   fetchData: () => Promise<Options[]>;
-  filterType:keyof Filters
+  filterType: keyof Filters
 }
 
-export default function MultiSelect({ isMulti = false, fetchData ,filterType}: Props) {
-  const { setFilters} = useJobStore();
+export default function MultiSelect({ isMulti = false, fetchData, filterType }: Props) {
+  const { setJobs,setFilters } = useJobStore();
   const [selectedOptions, setSelectedOptions] = useState<Options[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -19,12 +20,13 @@ export default function MultiSelect({ isMulti = false, fetchData ,filterType}: P
   const [loading, setLoading] = useState<boolean>(true);
   const inputRef = useRef<HTMLInputElement>(null)
   const selectRef = useRef<HTMLDivElement>(null)
-
+  const [searchParams] = useSearchParams();
   const toggleOption = (option: Options) => {
     setSelectedOptions(prevSelected => {
       const updatedSelectedOptions = isMulti
         ? [...prevSelected, option]
         : [option];
+        setJobs({ [filterType]: updatedSelectedOptions.map(opt => opt.value) })
       return updatedSelectedOptions;
     });
   };
@@ -32,9 +34,32 @@ export default function MultiSelect({ isMulti = false, fetchData ,filterType}: P
   const removeOption = (option: Options) => {
     setSelectedOptions(prevSelected => {
       const updatedSelectedOptions = prevSelected.filter(item => item.value !== option.value);
+      setJobs({ [filterType]: updatedSelectedOptions.map(opt => opt.value) })
       return updatedSelectedOptions;
     });
   };
+  // const removeOption = (option: Options) => {
+  //   setSelectedOptions((prevSelected) => {
+  //     const updatedSelectedOptions = prevSelected.filter(
+  //       (item) => item.value !== option.value
+  //     );
+  //     setJobs({ [filterType]: updatedSelectedOptions.map((opt) => opt.value) });
+  //     // Actualizar los parámetros de búsqueda en la URL
+  //     const currentValues = searchParams.get(filterType)?.split(',') || [];
+  //     const updatedValues = currentValues.filter((val) => val !== option.value);
+  
+  //     if (updatedValues.length > 0) {
+  //       searchParams.set(filterType, updatedValues.join(','));
+  //     } else {
+  //       searchParams.delete(filterType); // Si no hay valores, elimina el parámetro
+  //     }
+  
+  //     // Actualiza la URL con los nuevos parámetros
+  //     setSearchParams(searchParams);
+  
+  //     return updatedSelectedOptions;
+  //   });
+  // };
 
   const closeDropdown = () => {
     setIsOpen(false)
@@ -49,9 +74,23 @@ export default function MultiSelect({ isMulti = false, fetchData ,filterType}: P
     }
   }
   useEffect(() => {
-    const filters=selectedOptions.map(opt => opt.value)
-    setFilters({[filterType]:filters})
-  }, [selectedOptions, filterType, setFilters]);
+    
+    const rawValues = searchParams.getAll(filterType);
+    if (rawValues[0]!=='' && rawValues.length>0) {
+      console.log("rawValues[0]",rawValues);
+      
+      const values = rawValues[0].split(',').filter((item) => item.trim() !== '');
+      console.log("aa",values);
+      console.log(filterType,values);
+      setSelectedOptions(
+        values.map((item) => ({ value: item }))
+      );
+      setFilters({ [filterType]: values })
+      
+    }
+    // searchParams.set(filterType,filters.join(','));
+    // setSearchParams(searchParams);
+  }, [filterType,searchParams,setFilters]);
   useEffect(() => {
     const optionsData = async () => {
       try {

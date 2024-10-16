@@ -14,21 +14,26 @@ interface Position {
 export interface Filters {
   locations: string[];
   categories: string[];
+  limit:string;
+  offSet:string;
 }
 export interface Location{
     city: string,
     vacancies: number
 }
 export interface Job {
-  id: number;
-  descriptions: string[];
-  requirements: string[];
-  salary: string;
-  available: boolean;
-  category: Category;
-  position: Position;
-  images: string[];  // Array of image URLs
-  locations: Location[];  // Array of location names
-  department:string;
+  jobs:{
+    id: number;
+    descriptions: string[];
+    requirements: string[];
+    salary: string;
+    available: boolean;
+    category: Category;
+    position: Position;
+    images: string[];
+    locations: Location[];
+    department:string;
+  }[],
+  totalJobs:number;
 }
 

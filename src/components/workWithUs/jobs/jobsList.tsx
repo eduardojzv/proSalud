@@ -1,30 +1,27 @@
 import styles from './jobsList.module.css';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { fetchJobsData } from '../../../api/workWithUs/jobsData';
 import { useJobStore } from '../../../providers/zustand';
-import { Job } from '../../../helpers/interfaces/workWithUs';
+import { Filters} from '../../../helpers/interfaces/workWithUs';
 
 export default function JobList() {
   const [searchParams] = useSearchParams();
-  const { jobs, setJobs, filters } = useJobStore();
+  const { jobs, setJobs,setFilters} = useJobStore();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  // Obtener los valores de los parámetros de búsqueda
-  //ya esta funcionando con limit-------------------------
-  //XX no actualiza cuando cambio de valores
-  //falta agregar locations y categories al query string
-  const limit = searchParams.get('limit') || '5'; // Valor por defecto de 5 si no está en la URL
-  const offset = searchParams.get('offset') || '0'; // Valor por defecto de 0 si no está en la URL
-  const categories = searchParams.get('categories')?.split(',') || []; // Convertir a array
-  const locations = searchParams.get('locations')?.split(',') || []; // Convertir a array
+  const filters:Filters = {
+    limit: searchParams.get('limit') || '5',
+    offSet:  (parseInt(searchParams.get('page') || '1') - 1).toString(),
+    categories: searchParams.get('categories')?.split(',') || [],
+    locations: searchParams.get('locations')?.split(',') || []
+  }
   useEffect(() => {
-    const jobsData = async () => {
+    console.log("shi pa");
+    
+    setFilters(filters)
+    const jobsData =() => {
       try {
-        const data = await fetchJobsData({ limit, offset, categories, locations });
-        console.log("data", data);
-
-        setJobs(data);
+        setJobs(filters);
       } catch (error) {
         setError((error as Error).message);
       } finally {
@@ -32,14 +29,8 @@ export default function JobList() {
       }
     };
     jobsData();
-  }, [setJobs]);
-  const isProductVisible = (job: Job) => {
-    console.log(jobs);
+  }, [setFilters]);
 
-    return (filters.locations.length === 0 || job.locations.some(loc => filters.locations.includes(loc.city))) &&
-      (filters.categories.length === 0 || filters.categories.includes(job.category.category));
-
-  }
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -51,8 +42,8 @@ export default function JobList() {
   }
   return (
     <div className={styles.jobList}>
-      {jobs.map((job, idx) => (
-        <div key={job.id} className={`${styles.jobCard} ${isProductVisible(job) ? styles.job__visible : styles.job__hidden} `}>
+      {jobs.map((job) => (
+        <div key={job.id} className={`${styles.jobCard}`}>
           <div className={styles.jobHeader}>
             <div className={styles.jobLogo}>
               <img
@@ -64,7 +55,7 @@ export default function JobList() {
               <div className={styles.jobCategory}>{job.category.category}</div>
               <h3 className={styles.jobTitle}>{job.position.position}</h3>
               <div className={styles.jobLocation}>{job.locations.map(location => location.city).join('-')}</div>
-              <div className={styles.jobType}>{job.department}-{idx + 1}</div>
+              <div className={styles.jobType}>{job.department}-{job.id}</div>
             </div>
           </div>
           <div className={styles.jobDetails}>

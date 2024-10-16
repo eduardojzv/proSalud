@@ -2,9 +2,13 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, .5fr));
   gap: 32px;
-  width: 90%;
+  width: 95%;
   margin: 0 auto;
   justify-content: center;
+  background-color: red;
+  max-height: 600px;
+  overflow-y: scroll;
+  padding: 5px;
 }
 
 .jobCard {
@@ -13,7 +17,7 @@
   overflow: hidden;
   background-color: var(--primary-background);
   color: var(--title-color);
-  height: 650px;
+  height: 550px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -120,16 +124,6 @@
   text-align: center;
   font-size: var(--text-base);
 }
-
-/* .job__visible {
-display: block;
-transform: scale(1);
-}
-
-.job__hidden {
-display: none;
-transform: scale(0);
-} */
 @keyframes fadeInUp {
   from {
     opacity: 0;
