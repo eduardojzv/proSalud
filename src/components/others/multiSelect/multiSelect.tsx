@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function MultiSelect({ isMulti = false, fetchData, filterType }: Props) {
-  const { setJobs,setFilters } = useJobStore();
+  const { setJobs, setFilters, filters } = useJobStore();
   const [selectedOptions, setSelectedOptions] = useState<Options[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -20,13 +20,13 @@ export default function MultiSelect({ isMulti = false, fetchData, filterType }: 
   const [loading, setLoading] = useState<boolean>(true);
   const inputRef = useRef<HTMLInputElement>(null)
   const selectRef = useRef<HTMLDivElement>(null)
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const toggleOption = (option: Options) => {
     setSelectedOptions(prevSelected => {
       const updatedSelectedOptions = isMulti
         ? [...prevSelected, option]
         : [option];
-        setJobs({ [filterType]: updatedSelectedOptions.map(opt => opt.value) })
+      setJobs({ [filterType]: updatedSelectedOptions.map(opt => opt.value) })
       return updatedSelectedOptions;
     });
   };
@@ -38,28 +38,6 @@ export default function MultiSelect({ isMulti = false, fetchData, filterType }: 
       return updatedSelectedOptions;
     });
   };
-  // const removeOption = (option: Options) => {
-  //   setSelectedOptions((prevSelected) => {
-  //     const updatedSelectedOptions = prevSelected.filter(
-  //       (item) => item.value !== option.value
-  //     );
-  //     setJobs({ [filterType]: updatedSelectedOptions.map((opt) => opt.value) });
-  //     // Actualizar los parámetros de búsqueda en la URL
-  //     const currentValues = searchParams.get(filterType)?.split(',') || [];
-  //     const updatedValues = currentValues.filter((val) => val !== option.value);
-  
-  //     if (updatedValues.length > 0) {
-  //       searchParams.set(filterType, updatedValues.join(','));
-  //     } else {
-  //       searchParams.delete(filterType); // Si no hay valores, elimina el parámetro
-  //     }
-  
-  //     // Actualiza la URL con los nuevos parámetros
-  //     setSearchParams(searchParams);
-  
-  //     return updatedSelectedOptions;
-  //   });
-  // };
 
   const closeDropdown = () => {
     setIsOpen(false)
@@ -74,30 +52,32 @@ export default function MultiSelect({ isMulti = false, fetchData, filterType }: 
     }
   }
   useEffect(() => {
-    
+
     const rawValues = searchParams.getAll(filterType);
-    if (rawValues[0]!=='' && rawValues.length>0) {
-      console.log("rawValues[0]",rawValues);
-      
+    if (rawValues[0] !== '' && rawValues.length > 0) {
       const values = rawValues[0].split(',').filter((item) => item.trim() !== '');
-      console.log("aa",values);
-      console.log(filterType,values);
+      console.log(filterType, values);
       setSelectedOptions(
         values.map((item) => ({ value: item }))
       );
       setFilters({ [filterType]: values })
-      
+
     }
-    // searchParams.set(filterType,filters.join(','));
-    // setSearchParams(searchParams);
-  }, [filterType,searchParams,setFilters]);
+    // Actualizar la URL con los valores de filters.categories
+    const updatedParams = new URLSearchParams(searchParams);
+    updatedParams.set(filterType, filters.categories.join(','));
+    console.log('updatedParams',updatedParams);
+    
+    // Aplica los cambios en los parámetros de la URL
+    setSearchParams(updatedParams);
+  }, [filterType, searchParams, setFilters]);
   useEffect(() => {
     const optionsData = async () => {
       try {
         const data = await fetchData();
         setOptions(data);
       } catch (error) {
-        setError((error as Error).message);
+        setError('Error');
       } finally {
         setLoading(false);
       }
@@ -122,9 +102,6 @@ export default function MultiSelect({ isMulti = false, fetchData, filterType }: 
       setTimeout(() => inputRef.current?.focus(), 0)
     }
   }
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
   return (
     <div className={styles.multiSelectContainer} onKeyDown={handleKeyDown} ref={selectRef}>
       <div
@@ -138,7 +115,7 @@ export default function MultiSelect({ isMulti = false, fetchData, filterType }: 
       >
         <div className={styles.selectedOptions}>
           {selectedOptions.length === 0 ? (
-            <span className={styles.placeholder}>Select options...</span>
+            <span className={styles.placeholder}>{error ? error : 'Select options'}</span>
           ) : (
             <>
               {selectedOptions.map(option => (

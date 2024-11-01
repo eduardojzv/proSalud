@@ -14,8 +14,6 @@ export function Pagination() {
 
     const handlePaginate = (pageNumber: number) => {
         if (pageNumber >= 0 && pageNumber < totalPages) {
-            console.log("pageNumber",pageNumber);
-            
             const page = (pageNumber + 1).toString();
             searchParams.set('page', page);
             setSearchParams(searchParams);
@@ -27,12 +25,10 @@ export function Pagination() {
     useEffect(() => {
         const total = Math.ceil(totalJobs / parseInt(filters.limit));
         setTotalPages(total);
-        // if (currentPage > total) {
-        //     console.log("shi");
-            
-        //     handlePaginate(total - 1); // Ajustar a la última página disponible
-        // }
-    }, [totalJobs, filters.limit]);
+        if (currentPage > total) {
+            handlePaginate(total - 1); // Ajustar a la última página disponible
+        }
+    }, [totalJobs, filters,setFilters,handlePaginate]);
 
     return (
         <div className={pagination}>

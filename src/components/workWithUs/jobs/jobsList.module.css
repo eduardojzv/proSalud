@@ -1,11 +1,10 @@
 .jobList {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, .5fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 450px));
   gap: 32px;
   width: 95%;
   margin: 0 auto;
   justify-content: center;
-  background-color: red;
   max-height: 600px;
   overflow-y: scroll;
   padding: 5px;
