@@ -21,6 +21,7 @@ export interface MenuStructure {
 
 interface MenuLink {
     href: string;
+    state:boolean
 }
 
 export type MenuDetailsItems = {

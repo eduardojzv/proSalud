@@ -1,16 +1,10 @@
-from typing import Union
 from fastapi import FastAPI
-from models.models import Jobs
-from db import conn
+from routes.get_jobs import router_get_jobs
+from routes.insert_jobs import router_insert_jobs
+from routes.insert_countries import router_insert_countries
 app = FastAPI()
 
 
-@app.get("/")
-def get_jobs():
-    conn.execute(Jobs.select()).fetchall()
-    return {"Hello": "World"}
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+app.include_router(router_get_jobs)
+app.include_router(router_insert_jobs)
+app.include_router(router_insert_countries)

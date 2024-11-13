@@ -2,22 +2,28 @@ import { MenuDetails } from "../interfaces/menu"
 export const menuItems: MenuDetails = {
     items: {
         home: {
-            href: "/"
+            href: "/",
+            state: true
         },
         ourWork: {
-            href: "/our-work"
+            href: "/our-work",
+            state: false
         },
         ourBrands: {
-            href: "/our-brands"
+            href: "/our-brands",
+            state: true
         },
         sustainability: {
-            href: "/sustainability"
+            href: "/sustainability",
+            state: false
         },
         workWithUs: {
-            href: "/work-with-us"
+            href: "/work-with-us",
+            state: true
         },
         contactUs: {
-            href: "/contact-us"
+            href: "/contact-us",
+            state: false
         },
     },
     dropdownItems: {
@@ -26,14 +32,17 @@ export const menuItems: MenuDetails = {
             subLinks: {
                 ourLocation: {
                     href: "#",
+                    state: false
                 },
                 CR: {
                     href: "#",
+                    state: false
                 },
                 info: {
                     href: "#",
+                    state: false
                 }
             }
         },
     }
-}
+};

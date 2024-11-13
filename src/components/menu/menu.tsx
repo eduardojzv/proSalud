@@ -8,15 +8,15 @@ import { useTranslation } from 'react-i18next';
 import ButtonTheme from '../others/buttonTheme/buttonTheme';
 import { MenuDetailsItems, MenuStructure } from '../../helpers/interfaces/menu';
 import { NavLink } from 'react-router-dom';
-const { show, nav__menu, menu, menu__bar, container, nav__start, nav__end, nav__item, logo, menu__icons, nav__icons, nav__buttons, header__top,nav__active,nav__link } = styles
-export default function Menu() {    
+const { show, nav__menu, menu, menu__bar, container, nav__start, nav__end, nav__item, logo, menu__icons, nav__icons, nav__buttons, header__top, nav__active, nav__link } = styles
+export default function Menu() {
     const [isAtTop, setIsAtTop] = useState<boolean>(true);
     const { t } = useTranslation('menu');
     const [openMenu, setOpenMenu] = useState<boolean>(false)
-    function handleMenu(val: boolean) {        
-        if (isAtTop===true && val) {
+    function handleMenu(val: boolean) {
+        if (isAtTop === true && val) {
             setIsAtTop(false)
-        }else if (window.scrollY === 0 && !val) {
+        } else if (window.scrollY === 0 && !val) {
             setIsAtTop(true)
         }
         setOpenMenu(val)
@@ -38,7 +38,7 @@ export default function Menu() {
         };
     }, []);
     return (
-        <header className={`${nav__menu} ${!isAtTop ? header__top :""}`} aria-label="navigation bar">
+        <header className={`${nav__menu} ${!isAtTop ? header__top : ""}`} aria-label="navigation bar">
             <div className={container}>
                 <div className={nav__start}>
                     <a className={logo} href="/">
@@ -53,10 +53,13 @@ export default function Menu() {
                         <ul className={menu__bar}>
                             {Object.entries(menuItems.items).map(([key, val]) => (
                                 <li key={key}>
-                                    <NavLink  onClick={() => handleMenu(false)} className={({ isActive }) => `${nav__item} ${nav__link}  ${isActive ? nav__active : ""}`}  to={val.href}>
-                                        {/* {val.icon} */}
-                                        <span key={key}>{t(`items.${key as keyof MenuDetailsItems}`)}</span>
-                                    </NavLink>
+                                    {val.state &&
+                                        <NavLink onClick={() => handleMenu(false)} className={({ isActive }) => `${nav__item} ${nav__link}  ${isActive ? nav__active : ""}`} to={val.href}>
+                                            {/* {val.icon} */}
+                                            <span key={key}>{t(`items.${key as keyof MenuDetailsItems}`)}</span>
+                                        </NavLink>
+
+                                    }
                                 </li>
                             ))}
                             {
@@ -89,6 +92,6 @@ export default function Menu() {
                     </div>
                 </div>
             </div>
-        </header>
+        </header >
     )
 }
