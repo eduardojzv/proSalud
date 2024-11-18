@@ -5,15 +5,17 @@ from db import engine
 # Declarative base class
 class Base(DeclarativeBase):
     pass
-
-
-# Tabla intermedia para Jobs y Images (relación de muchos a muchos)
-job_images = Table(
-    'job_images', Base.metadata,
+# Tabla intermedia para Jobs y Skills (relación de muchos a muchos)
+job_skills = Table(
+    'job_skills', Base.metadata,
     Column('job_id', Integer, ForeignKey('jobs.id')),
-    Column('image_id', Integer, ForeignKey('images.id'))
+    Column('skill_id', Integer, ForeignKey('skills.id'))
 )
-
+# Modelo de Skills
+class Skills(Base):
+    __tablename__ = 'skills'
+    id = Column(Integer, primary_key=True)
+    skill_name = Column(String(50), nullable=False, unique=True)
 # Modelo de País
 class Countries(Base):
     __tablename__ = 'countries'
@@ -43,7 +45,17 @@ class Titles(Base):
     __tablename__ = 'titles'
     id = Column(Integer, primary_key=True)
     title = Column(String(30), nullable=False, unique=True)
-
+# Modelo de competencies
+class Competencies(Base):
+    __tablename__ = 'competencies'
+    id = Column(Integer, primary_key=True)
+    competence = Column(Text, nullable=False)
+# Tabla intermedia para Jobs y Descriptions (relación de muchos a muchos)
+job_competencies = Table(
+    'job_competencies', Base.metadata,
+    Column('job_id', Integer, ForeignKey('jobs.id')),
+    Column('competencies_id', Integer, ForeignKey('competencies.id'))
+)
 # Modelo de Descriptions
 class Descriptions(Base):
     __tablename__ = 'descriptions'
@@ -109,6 +121,11 @@ class ProfessionalLevels(Base):
     __tablename__ = 'professional_levels'
     id = Column(Integer, primary_key=True)
     level_name = Column(String(40), nullable=False, unique=True)
+# Modelo de position
+class Positions(Base):
+    __tablename__ = 'positions'
+    id = Column(Integer, primary_key=True)
+    position_name = Column(String(40), nullable=False, unique=True)
 
 # Modelo de Jobs
 class Jobs(Base):
@@ -118,7 +135,7 @@ class Jobs(Base):
     list_image_id = Column(Integer, ForeignKey('images.id'))
     presentation_img_id = Column(Integer, ForeignKey('images.id'))
     title_id = Column(Integer, ForeignKey('titles.id'))
-    position = Column(String(50), nullable=False)
+    position_id = Column(Integer,ForeignKey('positions.id'))
     state = Column(Boolean, nullable=False)
     slug = Column(Text, nullable=False)
     department_id = Column(Integer, ForeignKey('departments.id'))
@@ -130,12 +147,12 @@ class Jobs(Base):
     subcategory_id = Column(Integer, ForeignKey('subcategories.id'))
     sector_id = Column(Integer, ForeignKey('sectors.id'))
     
-    # Nuevas relaciones de ubicación
+    #relaciones de ubicación
     country_id = Column(Integer, ForeignKey('countries.id'))
     province_id = Column(Integer, ForeignKey('provinces.id'))
     canton_id = Column(Integer, ForeignKey('cantons.id'))
 
-    # Relaciones con tablas relacionadas
+    #tablas relacionadas
     title = relationship("Titles")
     category = relationship("Categories")
     subcategory = relationship("Subcategories")
@@ -147,6 +164,11 @@ class Jobs(Base):
     canton = relationship("Cantons")
     department = relationship("Departments")
     professional_level = relationship("ProfessionalLevels")
+    skills = relationship("Skills", secondary=job_skills, backref="jobs")
+    position=relationship("Positions")
+    competencies = relationship("Competencies", secondary=job_competencies, backref="jobs")
+
+
     
 # Crea todas las tablas en la base de datos
 Base.metadata.create_all(engine)

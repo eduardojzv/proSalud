@@ -1,12 +1,16 @@
 import random
 from sqlalchemy.orm import Session
-from models.jobs import Titles, Descriptions, Categories, Subcategories, Sectors, Requirements, Images, Jobs, Countries,Departments,ProfessionalLevels
+from models.jobs import (
+    Titles, Descriptions, Categories, Subcategories, Sectors,
+    Requirements, Images, Jobs, Departments,
+    ProfessionalLevels, Skills,Cantons,Positions,Competencies
+)
 from db import engine
-from enum import Enum
 from fastapi import APIRouter
-##
+# Lista de imágenes
+list_images = ['/flequeador.jpg', '/listImg.jpg']
 router_insert_jobs = APIRouter()
-
+########    AGREGAR DATOS A LA TABLA INTERMEDIA
 @router_insert_jobs.post("/insert_jobs")
 def insertar_datos_de_prueba(
     n_jobs: int,
@@ -17,95 +21,124 @@ def insertar_datos_de_prueba(
     n_subcategories: int,
     n_sectors: int,
     n_requirements: int,
-    n_descriptions: int
+    n_descriptions: int,
+    n_skills: int,
+    n_positions:int,
+    n_competencies:int
+    
 ):
-    try:
-        with Session(engine) as session:
-            # 1. Crear datos en tablas relacionadas según el número especificado
-            
-            # Insertar departamentos
-            departments = [Departments(department_name=f"Department {i}") for i in range(1, n_departments+1)]
-            session.add_all(departments)
+    with Session(engine) as session:
+        try:
+            # Insertar datos en competence
+            for i in range(1, n_competencies + 1):
+                competence = Competencies(competence=f"competence{i}")
+                session.add(competence)
+            # Insertar datos en positiobs
+            for i in range(1, n_positions + 1):
+                position = Positions(position_name=f"position{i}")
+                session.add(position)
+            # Insertar datos en Departments
+            for i in range(1, n_departments + 1):
+                department = Departments(department_name=f"department{i}")
+                session.add(department)
 
-            # Insertar niveles profesionales
-            professional_levels = [ProfessionalLevels(level_name=f"Level {i}") for i in range(1, n_levels+1)]
-            session.add_all(professional_levels)
+            # Insertar datos en ProfessionalLevels
+            for i in range(1, n_levels + 1):
+                level = ProfessionalLevels(level_name=f"level{i}")
+                session.add(level)
 
-            # Insertar títulos
-            titles = [Titles(title=f"Title {i}") for i in range(1, n_titles+1)]
-            session.add_all(titles)
+            # Insertar datos en Titles
+            for i in range(1, n_titles + 1):
+                title = Titles(title=f"title{i}")
+                session.add(title)
 
-            # Insertar descripciones
-            descriptions = [Descriptions(description=f"Description {i}") for i in range(1, n_descriptions+1)]
-            session.add_all(descriptions)
+            # Insertar datos en Categories
+            for i in range(1, n_categories + 1):
+                category = Categories(category_name=f"category{i}")
+                session.add(category)
+            session.commit()
 
-            # Insertar categorías
-            categories = [Categories(category_name=f"Category {i}") for i in range(1, n_categories+1)]
-            session.add_all(categories)
-            session.commit()  # Guardamos aquí para crear las categorías primero
+            # Insertar datos en Subcategories
+            categories = session.query(Categories).all()
+            for i in range(1, n_subcategories + 1):
+                subcategory = Subcategories(
+                    subcategory_name=f"subcategory{i}",
+                    category_id=random.choice(categories).id
+                )
+                session.add(subcategory)
 
-            # Insertar subcategorías asignando a cada una una categoría aleatoria
-            subcategories = [
-                Subcategories(subcategory_name=f"Subcategory {i}", category_id=random.choice(categories).id)
-                for i in range(1, n_subcategories+1)
-            ]
-            session.add_all(subcategories)
+            # Insertar datos en Sectors
+            for i in range(1, n_sectors + 1):
+                sector = Sectors(sector_name=f"sector{i}")
+                session.add(sector)
 
-            # Insertar sectores
-            sectors = [Sectors(sector_name=f"Sector {i}") for i in range(1, n_sectors+1)]
-            session.add_all(sectors)
+            # Insertar datos en Requirements
+            for i in range(1, n_requirements + 1):
+                requirement = Requirements(requirement=f"requirement{i}")
+                session.add(requirement)
 
-            # Insertar requerimientos
-            requirements = [Requirements(requirement=f"Requirement {i}") for i in range(1, n_requirements+1)]
-            session.add_all(requirements)
+            # Insertar datos en Descriptions
+            for i in range(1, n_descriptions + 1):
+                description = Descriptions(description=f"description{i}")
+                session.add(description)
 
-            # Insertar imágenes
-            # Insertar imágenes
+            # Insertar datos en Skills
+            for i in range(1, n_skills + 1):
+                skill = Skills(skill_name=f"skill{i}")
+                session.add(skill)
+            #insertar imagenes
             images = [Images(image_url="/listImg.jpg"), Images(image_url="/flequeador.jpg")]
             session.add_all(images)
+            #
+            session.commit()
 
-            session.commit()  # Guardar los datos creados
+            # Insertar datos en Jobs
+            departments = session.query(Departments).all()
+            levels = session.query(ProfessionalLevels).all()
+            titles = session.query(Titles).all()
+            categories = session.query(Categories).all()
+            subcategories = session.query(Subcategories).all()
+            sectors = session.query(Sectors).all()
+            descriptions = session.query(Descriptions).all()
+            requirements = session.query(Requirements).all()
+            skills = session.query(Skills).all()
+            cantons = session.query(Cantons).all()
+            positions=session.query(Positions).all()
+            competencies=session.query(Competencies).all()
 
-            # 2. Crear trabajos con referencias a títulos, descripciones, etc.
-            jobs = []
-            countries = session.query(Countries).all()
-
-            if not countries:
-                raise ValueError("No se encontraron países en la base de datos.")
-
-            for i in range(1, n_jobs+1):
-                # Seleccionar país, provincia y cantón aleatoriamente
-                country = random.choice(countries)
-                province = random.choice(country.provinces)
-                canton = random.choice(province.cantons)
-
-                # Crear un trabajo
+            for i in range(1, n_jobs + 1):
+                canton = random.choice(cantons)
                 job = Jobs(
                     vacancies=random.randint(1, 10),
-                    title_id=random.choice(titles).id,
-                    position=f"Position {i}",
-                    state= random.choice([True, False]),
-                    slug=f"job-{i}",
-                    department_id=random.choice(departments).id,
-                    professional_level_id=random.choice(professional_levels).id,
-                    working_day="Full Time",
-                    salary_min=random.randint(30000, 50000),
-                    salary_max=random.randint(50001, 70000),
-                    list_image_id=random.choice(images).id,
+                    
+                    list_image_id=random.choice(images).id,  # Lógica para imágenes si las tienes
                     presentation_img_id=random.choice(images).id,
+                    title_id=random.choice(titles).id,
+                    position_id=random.choice(positions).id,
+                    state=bool(i % 2),
+                    slug=f"job-slug-{i}",
+                    department_id=random.choice(departments).id,
+                    professional_level_id=random.choice(levels).id,
+                    working_day=f"working_day{i}",
+                    salary_min=random.randint(20000, 50000),
+                    salary_max=random.randint(50001, 100000),
                     category_id=random.choice(categories).id,
                     subcategory_id=random.choice(subcategories).id,
                     sector_id=random.choice(sectors).id,
-                    country_id=country.id,
-                    province_id=province.id,
+                    country_id=canton.province.country.id,
+                    province_id=canton.province.id,
                     canton_id=canton.id,
                 )
-                jobs.append(job)
+                job.descriptions = random.sample(descriptions, k=min(3, len(descriptions)))
+                job.requirements = random.sample(requirements, k=min(3, len(requirements)))
+                job.skills = random.sample(skills, k=min(3, len(skills)))
+                job.competencies = random.sample(competencies, k=min(3, len(competencies)))
 
-            session.add_all(jobs)
-            session.commit()  # Guardar los trabajos
+                session.add(job)
 
-        # Retornar mensaje de éxito
-        return {"message": f"Se han insertado {n_jobs} trabajos de prueba exitosamente."}
-    except Exception as e:
-        return {"error": str(e)}
+            session.commit()
+            return {"message": "Datos de prueba insertados exitosamente"}
+
+        except Exception as e:
+            session.rollback()
+            return {"error": str(e)}
