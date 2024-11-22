@@ -7,17 +7,17 @@ export const fetchJobsData = async ({ limit, offSet, categories, locations }: Fi
     ...(categories.length > 0 && { categories: categories.join(',') }),
     ...(locations.length > 0 && { locations: locations.join(',') })
   });
-  console.log("query",query.toString());
-  //arreglar offSet
   
-  const response = await fetch(`http://127.0.0.1:8000/jobs/all-jobs?${query.toString()}`);
+  //const response = await fetch(`http://127.0.0.1:8000/jobs/all-jobs?${query.toString()}`);
+  const response = await fetch(`http://127.0.0.1:8000/jobs/get-all-jobs`);
+
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
   const data = await response.json(); // Obtén la respuesta completa como JSON
   return {
     jobs:data.jobs,
-    totalJobs:data.totalJobs
+    //totalJobs:data.totalJobs
   };
 };
 

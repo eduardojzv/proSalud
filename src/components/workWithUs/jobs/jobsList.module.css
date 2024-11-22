@@ -1,150 +1,68 @@
-.jobList {
+.cardGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 450px));
-  gap: 32px;
-  width: 95%;
-  margin: 0 auto;
-  justify-content: center;
-  max-height: 600px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
   overflow-y: scroll;
-  padding: 5px;
+  width: 95%;
+  max-height: 550px;
+  margin: 0 auto;
+  background-color: var(--secondary-background);
+  padding: 20px;
+  border-radius: 10px;
 }
 
-.jobCard {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: var(--primary-background);
-  color: var(--title-color);
-  height: 550px;
+.card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: display 0s ease allow-discrete,scale 0.3s ease;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background-color: var(--primary-background);
+  transition: transform 0.3s ease;
+  cursor: pointer;
 }
-
-.jobHeader {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 10px;
-  height: 20%;
+.card:hover{
+transform: scale(1.05);
 }
-
-.jobLogo {
-  width: 100px;
-  height: 100px;
-  border-radius: 4px;
-}
-
-.jobLogo img {
-  object-fit: contain;
+.card__image {
   width: 100%;
   height: 100%;
+  object-fit: fill;
+}
+.card__imgContainer{
+width: 100%;
+height: 120px;
+}
+.card__content {
+  color: var(--title-color);
+  padding: 20px;
+
 }
 
-.jobInfo {
-  flex-grow: 1;
-  margin-left: 16px;
-}
-
-
-.jobTitle {
+.card__title {
+  margin: 0 0 10px;
   font-size: var(--text-base);
-  font-weight: 600;
-  margin: 4px 0;
 }
 
-.jobLocation,
-.jobType,
-.jobCategory {
+.card__info {
+  margin: 5px 0;
   font-size: var(--text-sm);
-  color: var(--title-color);
 }
 
-.job__link {
-  width: 100%;
-  height: 100%;
-  color: #e0e0e0;
-  padding: 10px;
-  text-align: center;
-  background-color: var(--highlight-color);
-  transition: transform .2s;
-}
-
-.job__link:hover {
-  transform: scale(1.2);
-}
-
-.job__footer {
-  height: 6%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-
-.icon {
-  width: 20px;
-  height: 20px;
-  margin-right: 4px;
-}
-
-.jobDetails {
-  height: 70%;
-  border-top: 1px solid #e0e0e0;
-  padding: 16px;
-  width: 100%;
-}
-
-.jobDetails>h4 {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 8px 0 4px;
-}
-
-.jobDetails>p {
-  font-size: 14px;
-  margin: 0 0 8px;
-  color: var(--title-color);
-}
-
-.job__requirements {
+.card__requirements {
+  margin: 0;
   padding-left: 20px;
-  list-style: decimal;
+  color: #666;
 }
-
-.job__requirements>li {
-  padding: 3px;
-}
-
-.job__no__data {
+.card__footer{
+  width: 100%;
+  background-color: #e6f4ea;
+  color: #34a853;
+  padding:5px;
   text-align: center;
-  font-size: var(--text-base);
 }
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@media (max-width: 812px) {
-  .jobCard {
-    height: fit-content;
-  }
-
-  .jobHeader {
-    flex-direction: column;
-    align-items: start;
-    gap: 10px;
-  }
-
-  .jobLogo {
-    width: 100%;
-  }
+.card__vacancybadge {
+  
 }

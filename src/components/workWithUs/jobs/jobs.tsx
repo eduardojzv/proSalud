@@ -19,11 +19,11 @@ export default function Jobs({ t }: Props) {
         </Trans>
       </section>
       <section className={jobs__filter}>
-        <Filter />
+        {/* <Filter /> */}
       </section>
       <section className={jobs__list}>
         <JobList />
-        <Pagination />
+        {/* <Pagination /> */}
       </section>
     </div>
   )

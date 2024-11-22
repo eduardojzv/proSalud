@@ -83,7 +83,6 @@ select distinct
     titles.title,
     positions.position_name,
     categories.category_name,
-    GROUP_CONCAT(DISTINCT requirements.requirement) AS requirements,
 	countries.country_name,
     provinces.province_name,
     cantons.canton_name
@@ -102,4 +101,36 @@ LEFT JOIN requirements ON job_requirements.requirement_id = requirements.id
 LEFT JOIN countries ON jobs.country_id = countries.id
 LEFT JOIN provinces ON jobs.province_id = provinces.id
 LEFT JOIN cantons ON jobs.canton_id = cantons.id;
+/**/
+SELECT
+    jobs.id AS job_id,
+    jobs.vacancies,
+    images_list.image_url AS list_image_url,
+    titles.title,
+    positions.position_name,
+    categories.category_name,
+     GROUP_CONCAT(requirements.requirement) AS requirements,
+    countries.country_name ,
+    provinces.province_name,
+    cantons.canton_name
+FROM jobs
+-- Relaciones con imágenes
+LEFT JOIN images AS images_list ON jobs.list_image_id = images_list.id
+-- Relación con titles
+LEFT JOIN titles ON jobs.title_id = titles.id
+-- Relación con positions
+LEFT JOIN positions ON jobs.position_id = positions.id
+-- Relación con categories
+LEFT JOIN categories ON jobs.category_id = categories.id
+-- Relación con job_requirements (tabla intermedia)
+LEFT JOIN job_requirements ON jobs.id = job_requirements.job_id
+-- Relación con requirements
+LEFT JOIN requirements ON job_requirements.requirement_id = requirements.id
+-- Relaciones con ubicaciones (países, provincias, cantones)
+LEFT JOIN countries ON jobs.country_id = countries.id
+LEFT JOIN provinces ON jobs.province_id = provinces.id
+LEFT JOIN cantons ON jobs.canton_id = cantons.id
+group by
+jobs.id;
 
+select sum(jobs.vacancies) from jobs;
