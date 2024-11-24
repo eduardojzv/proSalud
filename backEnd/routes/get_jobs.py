@@ -1,18 +1,30 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import func
-from models.jobs import Jobs, Titles, Categories, Subcategories, Sectors, Departments, ProfessionalLevels, Countries, Provinces, Cantons,Positions,Requirements,job_requirements,Images
-from db import get_session, engine  # `get_db` es una dependencia para obtener la sesión.
+from models.jobs import (
+    Jobs, Titles, Categories, Subcategories, Sectors, Departments,
+    ProfessionalLevels, Countries, Provinces, Cantons, Positions,
+    Requirements, job_requirements, Images
+)
+from db import get_session
 
 router_get_jobs = APIRouter()
 
 @router_get_jobs.get("/get-all-jobs")
-
-def get_jobs(db: Session = Depends(get_session)):
+def get_jobs(
+    limit: int = Query(5, le=100, ge=5, alias="limit"),
+    offset: int = Query(0, ge=0, alias="offset"),
+    categories: str = Query(None, alias="categories"),
+    country: str = Query(None, alias="country"),
+    province: str = Query(None, alias="province"),
+    canton: str = Query(None, alias="canton"),
+    db: Session = Depends(get_session),
+):
     try:
         # Crear la sesión
-        with Session(engine) as session:
-            jobs = session.query(
+        with db as session:
+            # Construir la consulta base para los datos de trabajos
+            base_query = session.query(
                 Jobs.id.label("id"),
                 Jobs.vacancies,
                 Titles.title.label("title"),
@@ -31,7 +43,7 @@ def get_jobs(db: Session = Depends(get_session)):
                 Countries.country_name.label("country"),
                 Provinces.province_name.label("province"),
                 Cantons.canton_name.label("canton"),
-                func.group_concat(Requirements.requirement).label("requirements"),  # Recolectar requisitos
+                func.group_concat(Requirements.requirement).label("requirements"),
             )\
             .join(Titles, Jobs.title_id == Titles.id, isouter=True)\
             .join(Positions, Jobs.position_id == Positions.id, isouter=True)\
@@ -52,8 +64,28 @@ def get_jobs(db: Session = Depends(get_session)):
                 Jobs.working_day, Jobs.salary_min, Jobs.salary_max,
                 Categories.category_name, Subcategories.subcategory_name, Sectors.sector_name,
                 Countries.country_name, Provinces.province_name, Cantons.canton_name
-            )\
-            .all()
+            )
+
+            # Aplicar filtros dinámicos
+            if categories:
+                base_query = base_query.filter(Categories.category_name.in_(categories.split(',')))
+            if country:
+                base_query = base_query.filter(Countries.country_name == country)
+            if province:
+                base_query = base_query.filter(Provinces.province_name == province)
+            if canton:
+                base_query = base_query.filter(Cantons.canton_name == canton)
+
+            # Obtener el total de trabajos sin paginación
+            total_jobs = session.query(func.count(Jobs.id)).filter(
+                base_query.exists()
+            ).scalar()
+
+            # Aplicar paginación
+            paginated_query = base_query.offset(offset).limit(limit)
+
+            # Ejecutar la consulta para obtener los trabajos
+            jobs = paginated_query.all()
 
             # Formatear los datos para la respuesta
             result = [
@@ -62,7 +94,7 @@ def get_jobs(db: Session = Depends(get_session)):
                     "vacancies": job.vacancies,
                     "title": job.title,
                     "position": job.position,
-                    "image_url":job.image_url,
+                    "image_url": job.image_url,
                     "state": job.state,
                     "slug": job.slug,
                     "department": job.department,
@@ -76,11 +108,13 @@ def get_jobs(db: Session = Depends(get_session)):
                     "country": job.country,
                     "province": job.province,
                     "canton": job.canton,
-                    "requirements": job.requirements.split(",") if job.requirements else []  # Dividir los requisitos
+                    "requirements": job.requirements.split(",") if job.requirements else []
                 }
                 for job in jobs
             ]
 
-            return {"jobs": result}
+            return {"jobs": result, "totalJobs": total_jobs}
     except Exception as e:
+        session.rollback()
+        print("Error:", e)
         return {"error": str(e)}

@@ -132,5 +132,8 @@ LEFT JOIN provinces ON jobs.province_id = provinces.id
 LEFT JOIN cantons ON jobs.canton_id = cantons.id
 group by
 jobs.id;
-
-select sum(jobs.vacancies) from jobs;
+use ProSalud;
+SELECT *
+FROM jobs
+JOIN categories ON jobs.category_id = categories.id
+WHERE categories.category_name = 'category1' and jobs.country_id=2 and jobs.province_id=19;

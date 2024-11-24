@@ -12,10 +12,14 @@ interface Position {
   position: string;
 }
 export interface Filters {
-  locations: string[];
+  locations: {
+    country:string,
+    province:string,
+    canton:string
+  };
   categories: string[];
-  limit: string;
-  offSet: string;
+  limit: number;
+  offSet: number;
 }
 export interface Location {
   city: string,
@@ -59,5 +63,5 @@ export interface Job {
     canton: string;
     requirements: string[];
   }[],
-  //totalJobs:number;
+  totalJobs:number;
 }

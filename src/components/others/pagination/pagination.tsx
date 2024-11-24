@@ -1,59 +1,128 @@
+import { Fragment, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import styles from './pagination.module.css';
 import { useJobStore } from '../../../providers/zustand';
 import { IconLeftArrow } from '../../../icons/others/icons';
-import { useEffect, useState } from 'react';
 
-const { pagination, pagination__button, prev__button, pagination__active, pagination__next } = styles;
+const {
+    pagination,
+    pagination__button,
+    prev__button,
+    pagination__active,
+    pagination__next,
+    pagination__ellipsis,
+} = styles;
 
 export function Pagination() {
-    const { setFilters, setJobs, totalJobs, filters } = useJobStore();
-    const [totalPages, setTotalPages] = useState<number>(5);
+    const { setFilters, totalJobs, filters } = useJobStore();
     const [searchParams, setSearchParams] = useSearchParams();
-    const currentPage = parseInt(searchParams.get('page') || '1') - 1;
 
-    const handlePaginate = (pageNumber: number) => {
-        if (pageNumber >= 0 && pageNumber < totalPages) {
-            const page = (pageNumber + 1).toString();
-            searchParams.set('page', page);
+    const totalPages = Math.ceil(totalJobs / filters.limit); // Calcula el total de páginas
+    const urlPage = parseInt(searchParams.get('page') || '1'); // Página actual en base-1 (por defecto 1)
+
+    // Genera los números de página visibles
+    const getPageNumbers = () => {
+        const pageNumbers = [];
+        const maxVisiblePages = 7;
+
+        if (totalPages <= maxVisiblePages) {
+            return Array.from({ length: totalPages }, (_, i) => i + 1); // Todas las páginas si son pocas
+        }
+
+        pageNumbers.push(1); // Primera página siempre visible
+
+        if (urlPage > 3) {
+            pageNumbers.push('...');
+        }
+
+        let start = Math.max(2, urlPage - 1);
+        let end = Math.min(totalPages - 1, urlPage + 1);
+
+        if (urlPage <= 3) {
+            end = Math.min(totalPages - 1, maxVisiblePages - 2);
+        }
+
+        if (urlPage >= totalPages - 2) {
+            start = Math.max(2, totalPages - maxVisiblePages + 3);
+        }
+
+        for (let i = start; i <= end; i++) {
+            pageNumbers.push(i);
+        }
+
+        if (urlPage < totalPages - 2) {
+            pageNumbers.push('...');
+        }
+
+        pageNumbers.push(totalPages); // Última página siempre visible
+
+        return pageNumbers;
+    };
+
+    const visiblePages = getPageNumbers();
+
+    // Sincroniza el parámetro `page` de la URL con el estado del store
+    useEffect(() => {
+        if (isNaN(urlPage) || urlPage < 1 || urlPage > totalPages) {
+            const defaultPage = 1; // Página predeterminada
+            searchParams.set('page', defaultPage.toString());
             setSearchParams(searchParams);
-            setFilters({ offSet: pageNumber.toString() });
-            setJobs({ offSet: pageNumber.toString() });
+        }
+    }, [filters.offSet]);
+
+    // Maneja la navegación entre páginas
+    const handlePaginate = (pageNumber: number) => {
+        if (pageNumber >= 1 && pageNumber <= totalPages) {
+            searchParams.set('page', pageNumber.toString());
+            setSearchParams(searchParams);
+
+            // Actualizar el estado con el nuevo `offset` (base-0)
+            if (filters.offSet !== urlPage - 1) {
+                // Ajustar `offset` en base-0
+                setFilters({ ...filters, offSet: pageNumber - 1 });
+            }
+            //setJobs({ offSet: pageNumber - 1 });
         }
     };
 
-    useEffect(() => {
-        const total = Math.ceil(totalJobs / parseInt(filters.limit));
-        setTotalPages(total);
-        if (currentPage > total) {
-            handlePaginate(total - 1); // Ajustar a la última página disponible
-        }
-    }, [totalJobs, filters,setFilters,handlePaginate]);
-
     return (
         <div className={pagination}>
+            {/* Botón para la página anterior */}
             <button
-                onClick={() => handlePaginate(currentPage - 1)}
-                disabled={currentPage === 0}
+                onClick={() => handlePaginate(urlPage - 1)}
+                disabled={urlPage === 1}
                 className={`${pagination__button} ${prev__button}`}
+                aria-label="Previous page"
             >
                 <IconLeftArrow />
             </button>
 
-            {[...Array(totalPages)].map((_, index) => (
-                <button
-                    key={index}
-                    onClick={() => handlePaginate(index)}
-                    className={`${pagination__button} ${currentPage === index ? pagination__active : ''}`}
-                >
-                    {index + 1}
-                </button>
+            {/* Botones de paginación */}
+            {visiblePages.map((pageNumber, index) => (
+                <Fragment key={index}>
+                    {pageNumber === '...' ? (
+                        <span className={pagination__ellipsis}>...</span>
+                    ) : (
+                        <button
+                            onClick={() => handlePaginate(pageNumber as number)}
+                            className={`${pagination__button} ${
+                                urlPage === pageNumber ? pagination__active : ''
+                            }`}
+                            aria-label={`Page ${pageNumber}`}
+                            aria-current={urlPage === pageNumber ? 'page' : undefined}
+                        >
+                            {pageNumber}
+                        </button>
+                    )}
+                </Fragment>
             ))}
 
+            {/* Botón para la página siguiente */}
             <button
-                onClick={() => handlePaginate(currentPage + 1)}
-                disabled={currentPage + 1 === totalPages}
+                onClick={() => handlePaginate(urlPage + 1)}
+                disabled={urlPage === totalPages}
                 className={`${pagination__button} ${pagination__next}`}
+                aria-label="Next page"
             >
                 <IconLeftArrow />
             </button>

@@ -1,50 +1,58 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useId } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useJobStore } from '../../../providers/zustand';
 
 export default function Limit() {
-    const {setFilters,setJobs} = useJobStore();
+    const limitID = useId();
+    const { setFilters, filters } = useJobStore();
     const [searchParams, setSearchParams] = useSearchParams();
-    const limits:number[]=[5,10,15]
+
+    // Valores permitidos para el límite
+    const limits: number[] = [5, 10, 15, 20];
+
     useEffect(() => {
-        const valueLimit=searchParams.get('limit')
-        console.log("value limit",valueLimit);
-        
-        if (!valueLimit || !limits.includes(parseInt(valueLimit))) {
-            
-            searchParams.set('limit', '5');
+        let urlLimit = parseInt(searchParams.get('limit') || ''); // Convertir el valor de la URL a número
+
+        // Validar si `urlLimit` no es válido o no está en los valores permitidos
+        if (isNaN(urlLimit) || !limits.includes(urlLimit)) {
+            urlLimit = limits[0]; // Valor predeterminado
+            searchParams.set('limit', urlLimit.toString()); // Actualizar en la URL
             setSearchParams(searchParams);
         }
-        if (valueLimit) {
-            setFilters({limit:valueLimit})
+
+        // Sincronizar `filters.limit` con el valor válido de la URL
+        if (filters.limit !== urlLimit) {
+            setFilters({ ...filters, limit: urlLimit });
         }
-    }, [searchParams]);
+    }, [filters.limit]);
+    //}, [filters.limit, searchParams, setFilters, setSearchParams]);
 
-    // Maneja el cambio en el límite
-    const handleLimit = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const newLimit = event.target.value;
-        searchParams.set('limit', newLimit);
+    // Maneja el cambio del límite desde el dropdown
+    const handleLimitChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const newLimit = parseInt(event.target.value, 10); // Convertir a número
+
+        // Actualizar en la URL y el store
+        searchParams.set('limit', newLimit.toString());
         setSearchParams(searchParams);
-        setJobs({limit:newLimit});
-        //
-        const page=searchParams.get('page')
-
-        console.log("page",page);
+        setFilters({ ...filters, limit: newLimit });
+        //setJobs({ limit: newLimit });
     };
 
     return (
-        <>
-            <label htmlFor="jobsPerPage">Limit:</label>
+        <div>
+            <label htmlFor={limitID}>Limit:</label>
             <select
-                id="jobsPerPage"
-                value={searchParams.get('limit') || '5'}
-                onChange={handleLimit}
-                className=""
+                id={limitID}
+                value={filters.limit}
+                onChange={handleLimitChange}
+                className="select-class"
             >
-                {limits.map((limit)=>(
-                    <option value={limit} key={`limit-${limit}`}>{limit}</option>
+                {limits.map((value) => (
+                    <option value={value} key={`limit-${value}`}>
+                        {value}
+                    </option>
                 ))}
             </select>
-        </>
+        </div>
     );
 }

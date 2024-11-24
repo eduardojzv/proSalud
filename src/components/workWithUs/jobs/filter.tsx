@@ -7,8 +7,8 @@ export default function Filter() {
   return (
     <div className={filter}>
       <div className={filter__multi__select}>
-        <MultiSelect isMulti={true} fetchData={fetchLocationsData} filterType={'locations'} />
-        <MultiSelect isMulti={true} fetchData={fetchPositionsData} filterType={'categories'} />
+        {/* <MultiSelect isMulti={true} fetchData={fetchLocationsData} filterType={'locations'} />
+        <MultiSelect isMulti={true} fetchData={fetchPositionsData} filterType={'categories'} /> */}
       </div>
       <div className={filter__limit}  >
         <Limit />

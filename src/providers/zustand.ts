@@ -18,10 +18,14 @@ export const useJobStore = create<JobStore>((set, get) => ({
     jobs: [],
     totalJobs: 0,
     filters: {
-        locations: [],
+        locations: {
+            country:'',
+            province:'',
+            canton:''
+        },
         categories: [],
-        limit: '',
-        offSet: '',
+        limit: 5,
+        offSet: 0,
     },
     jobOffers: {
         offers: 0,
@@ -52,7 +56,7 @@ export const useJobStore = create<JobStore>((set, get) => ({
         const data = await fetchJobsData({ ...currentFilters, ...filters })
         set((state) => {
             state.setJobOffers(data.jobs)
-            return { jobs: data.jobs };
+            return { jobs: data.jobs,totalJobs:data.totalJobs };
         })
     },
 }));

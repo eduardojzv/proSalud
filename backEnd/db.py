@@ -4,8 +4,9 @@ from sqlalchemy.orm import Session
 engine = create_engine("mysql+pymysql://root:root123@localhost:3306/ProSalud")
 # Dependencia para obtener la sesión de la base de datos
 def get_session():
-    db = Session(engine)
+    session = Session(engine)
     try:
-        yield db
+        yield session
     finally:
-        db.close()
+        print("probando finally")
+        session.close()

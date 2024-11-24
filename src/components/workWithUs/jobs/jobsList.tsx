@@ -8,12 +8,15 @@ export default function JobList() {
   const { jobs, setJobs, setFilters } = useJobStore();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const filters: Filters = {
-    limit: searchParams.get('limit') || '5',
-    offSet: (parseInt(searchParams.get('page') || '1') - 1).toString(),
+  const filters: Partial<Filters> = {
+    offSet: (parseInt(searchParams.get('page') || '1') - 1),
     categories: searchParams.get('categories')?.split(',') || [],
-    locations: searchParams.get('locations')?.split(',') || []
-  }
+    locations: {
+      country: searchParams.get('country') || '',
+      province: searchParams.get('province') || '',
+      canton: searchParams.get('canton') || '',
+    },
+  };
   useEffect(() => {
     setFilters(filters)
     const jobsData = () => {
@@ -26,7 +29,7 @@ export default function JobList() {
       }
     };
     jobsData();
-  }, [setFilters]);
+  }, [searchParams]);
 
   if (loading) {
     return <div>Loading...</div>;
