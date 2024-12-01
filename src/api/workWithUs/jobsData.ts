@@ -1,5 +1,7 @@
 import { Filters, Job, Options } from "../../helpers/interfaces/workWithUs";
-export const fetchJobsData = async ({ limit, offSet, categories, locations }: Filters): Promise<Job> => {
+export const fetchJobsData = async ({ limit, offSet,
+  //categories,
+  locations }: Filters): Promise<Job> => {
   // Construir la URL con los parámetros
   const query = new URLSearchParams({
     limit: limit.toString(),
@@ -18,7 +20,7 @@ export const fetchJobsData = async ({ limit, offSet, categories, locations }: Fi
   const data = await response.json(); // Obtén la respuesta completa como JSON
   return {
     jobs: data.jobs,
-    totalJobs:data.totalJobs
+    totalJobs: data.totalJobs
   };
 };
 
@@ -27,7 +29,7 @@ export const fetchContriessData = async (): Promise<Options[]> => {
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
-  const data=await response.json()
+  const data = await response.json()
   return data.countries;
 };
 
