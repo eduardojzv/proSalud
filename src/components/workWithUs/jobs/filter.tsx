@@ -5,7 +5,6 @@ import MultiSelect from '../../others/multiSelect/multiSelect';
 import styles from './filter.module.css';
 
 const { filter, filter__limit, filter__multi__select } = styles;
-
 export default function Filter() {
   // Interfaz para las opciones de filtros
   interface FilterOption {

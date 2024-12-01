@@ -1,4 +1,5 @@
 import { Filters, Job, Options } from "../../helpers/interfaces/workWithUs";
+const URL_API:string =import.meta.env.VITE_API_BACKEND || "http://127.0.0.1:8000"
 export const fetchJobsData = async ({ limit, offSet,
   //categories,
   locations }: Filters): Promise<Job> => {
@@ -11,8 +12,7 @@ export const fetchJobsData = async ({ limit, offSet,
     //...(locations.province && { province: locations.province }),
     //...(locations.canton && { canton: locations.canton }),
   });
-  const response = await fetch(`https://prosalud-ylx0.onrender.com/jobs/get-all-jobs?${query.toString()}`);
-  //const response = await fetch(`http://127.0.0.1:8000/jobs/get-all-jobs`);
+  const response = await fetch(`${URL_API}/jobs/get-all-jobs?${query.toString()}`);
 
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
@@ -25,7 +25,7 @@ export const fetchJobsData = async ({ limit, offSet,
 };
 
 export const fetchContriessData = async (): Promise<Options[]> => {
-  const response = await fetch('https://prosalud-ylx0.onrender.com/location/get-countries');
+  const response = await fetch(`${URL_API}/location/get-countries`);
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
@@ -34,7 +34,7 @@ export const fetchContriessData = async (): Promise<Options[]> => {
 };
 
 export const fetchPositionsData = async (): Promise<Options[]> => {
-  const response = await fetch('https://prosalud-ylx0.onrender.com/jobs/all-categories');
+  const response = await fetch(`${URL_API}/jobs/all-categories`);
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }

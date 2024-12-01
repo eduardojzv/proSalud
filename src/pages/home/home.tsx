@@ -16,7 +16,6 @@ export default function Home() {
     const [CertificationsRef, IntersectingCertifications] = useIntersectionObserver(IntersectionOpc)
     const [AchievementsRef, IntersectingAchievements] = useIntersectionObserver(IntersectionOpc)
     const [ManufacturingRef, IntersectingManufacturing] = useIntersectionObserver(IntersectionOpc)
-
     return (
         <div className={home}>
             <section className={home__carrousel}>
