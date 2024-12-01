@@ -1,1 +1,1 @@
---Arreglar el query string de limit
+--total jobs no carga bien, por lo que es 0 las primeras veces

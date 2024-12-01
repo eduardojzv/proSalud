@@ -46,7 +46,7 @@ export const useJobStore = create<JobStore>((set, get) => ({
         });
     },
     setFilters: (newFilters: Partial<Filters>) => {
-        set((state) => {
+        set((state) => {            
             const updatedFilters = { ...state.filters, ...newFilters };
             return { filters: updatedFilters };
         });
@@ -54,6 +54,7 @@ export const useJobStore = create<JobStore>((set, get) => ({
     setJobs: async (filters) => {
         const currentFilters = get().filters;
         const data = await fetchJobsData({ ...currentFilters, ...filters })
+        console.log("data",data);
         set((state) => {
             state.setJobOffers(data.jobs)
             return { jobs: data.jobs,totalJobs:data.totalJobs };

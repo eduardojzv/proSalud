@@ -1,4 +1,4 @@
-import { Fragment, useEffect } from 'react';
+import { Fragment} from 'react';
 import { useSearchParams } from 'react-router-dom';
 import styles from './pagination.module.css';
 import { useJobStore } from '../../../providers/zustand';
@@ -61,27 +61,16 @@ export function Pagination() {
 
     const visiblePages = getPageNumbers();
 
-    // Sincroniza el parámetro `page` de la URL con el estado del store
-    useEffect(() => {
-        if (isNaN(urlPage) || urlPage < 1 || urlPage > totalPages) {
-            const defaultPage = 1; // Página predeterminada
-            searchParams.set('page', defaultPage.toString());
-            setSearchParams(searchParams);
-        }
-    }, [filters.offSet]);
-
     // Maneja la navegación entre páginas
     const handlePaginate = (pageNumber: number) => {
         if (pageNumber >= 1 && pageNumber <= totalPages) {
             searchParams.set('page', pageNumber.toString());
             setSearchParams(searchParams);
-
             // Actualizar el estado con el nuevo `offset` (base-0)
             if (filters.offSet !== urlPage - 1) {
                 // Ajustar `offset` en base-0
                 setFilters({ ...filters, offSet: pageNumber - 1 });
             }
-            //setJobs({ offSet: pageNumber - 1 });
         }
     };
 

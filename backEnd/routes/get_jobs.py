@@ -1,3 +1,4 @@
+from typing import List, Optional
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import func
@@ -14,16 +15,16 @@ router_get_jobs = APIRouter()
 def get_jobs(
     limit: int = Query(5, le=100, ge=5, alias="limit"),
     offset: int = Query(0, ge=0, alias="offset"),
-    categories: str = Query(None, alias="categories"),
-    country: str = Query(None, alias="country"),
-    province: str = Query(None, alias="province"),
-    canton: str = Query(None, alias="canton"),
+    categories: Optional[str] = Query(None, alias="categories"),
+    country: Optional[List[str]] = Query(None, alias="country"),
+    province: Optional[str] = Query(None, alias="province"),
+    canton: Optional[str] = Query(None, alias="canton"),
     db: Session = Depends(get_session),
 ):
+    print("eee",country)
     try:
-        # Crear la sesión
         with db as session:
-            # Construir la consulta base para los datos de trabajos
+            # Construir la consulta base
             base_query = session.query(
                 Jobs.id.label("id"),
                 Jobs.vacancies,
@@ -70,7 +71,7 @@ def get_jobs(
             if categories:
                 base_query = base_query.filter(Categories.category_name.in_(categories.split(',')))
             if country:
-                base_query = base_query.filter(Countries.country_name == country)
+                base_query = base_query.filter(Countries.country_name.in_(country))
             if province:
                 base_query = base_query.filter(Provinces.province_name == province)
             if canton:
