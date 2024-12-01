@@ -9,7 +9,7 @@ export const fetchJobsData = async ({ limit, offSet, categories, locations }: Fi
     //...(locations.province && { province: locations.province }),
     //...(locations.canton && { canton: locations.canton }),
   });
-  const response = await fetch(`http://127.0.0.1:8000/jobs/get-all-jobs?${query.toString()}`);
+  const response = await fetch(`https://prosalud-ylx0.onrender.com/jobs/get-all-jobs?${query.toString()}`);
   //const response = await fetch(`http://127.0.0.1:8000/jobs/get-all-jobs`);
 
   if (!response.ok) {
@@ -23,7 +23,7 @@ export const fetchJobsData = async ({ limit, offSet, categories, locations }: Fi
 };
 
 export const fetchContriessData = async (): Promise<Options[]> => {
-  const response = await fetch('http://localhost:8000/location/get-countries');
+  const response = await fetch('https://prosalud-ylx0.onrender.com/location/get-countries');
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
@@ -32,7 +32,7 @@ export const fetchContriessData = async (): Promise<Options[]> => {
 };
 
 export const fetchPositionsData = async (): Promise<Options[]> => {
-  const response = await fetch('http://127.0.0.1:8000/jobs/all-categories');
+  const response = await fetch('https://prosalud-ylx0.onrender.com/jobs/all-categories');
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
