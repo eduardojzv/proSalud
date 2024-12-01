@@ -1,5 +1,6 @@
 import { Filters, Job, Options } from "../../helpers/interfaces/workWithUs";
-const URL_API:string =import.meta.env.VITE_API_BACKEND || "http://127.0.0.1:8000"
+const URL_API:string =import.meta.env.VITE_API_BACKEND
+console.log("URL_API",URL_API);
 export const fetchJobsData = async ({ limit, offSet,
   //categories,
   locations }: Filters): Promise<Job> => {
