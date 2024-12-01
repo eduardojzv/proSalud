@@ -4,7 +4,6 @@ from routes.insert_jobs import router_insert_jobs
 from routes.insert_countries import router_insert_countries
 from routes.get_locations import router_get_locations
 from fastapi.middleware.cors import CORSMiddleware
-
 app = FastAPI()
 origins = ["*"]
 
