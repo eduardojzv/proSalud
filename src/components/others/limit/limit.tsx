@@ -5,7 +5,7 @@ import { limits } from '../../../helpers/jobList/limits';
 
 export default function Limit() {
     const limitID = useId();
-    const { setFilters, filters } = useJobStore();
+    const {filters } = useJobStore();
     const [searchParams, setSearchParams] = useSearchParams();
     // Maneja el cambio del límite desde el dropdown
     const handleLimitChange = (event: React.ChangeEvent<HTMLSelectElement>) => {

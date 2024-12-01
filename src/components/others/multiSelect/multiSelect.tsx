@@ -91,11 +91,21 @@ export default function MultiSelect({
     }
   }
 
+  // useEffect(() => {
+  //   const rawValues = searchParams.getAll(filterTypeKey);
+  //   if (rawValues.length > 0) {
+  //     const values = rawValues[0].split(',').filter((item) => item.trim() !== '');
+  //     setSelectedOptions(values.map((item) => ({ value: item })));
+  //     setFilters({ ...filters, [filterTypeKey]: values });
+  //   }
+  // }, []);
   useEffect(() => {
     const rawValues = searchParams.getAll(filterTypeKey);
     if (rawValues.length > 0) {
       const values = rawValues[0].split(',').filter((item) => item.trim() !== '');
-      setSelectedOptions(values.map((item) => ({ value: item })));
+      setSelectedOptions(
+        values.map((item) => ({ value: item })) as Options[] // Ignorar error con aserción de tipo
+      );
       setFilters({ ...filters, [filterTypeKey]: values });
     }
   }, []);
