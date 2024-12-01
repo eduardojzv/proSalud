@@ -1,4 +1,4 @@
-import { fetchContriessData, fetchPositionsData } from '../../../api/workWithUs/jobsData';
+import { fetchContriessData } from '../../../api/workWithUs/jobsData';
 import { Filters, Options } from '../../../helpers/interfaces/workWithUs';
 import Limit from '../../others/limit/limit';
 import MultiSelect from '../../others/multiSelect/multiSelect';
