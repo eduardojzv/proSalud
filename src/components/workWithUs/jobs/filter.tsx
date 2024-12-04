@@ -24,7 +24,7 @@ export default function Filter() {
   const filtersOptions: FilterOption[] = [
     //primero por localizaciones
     {
-      isMulti: true,
+      isMulti: false,
       fetchDataFunc: fetchContriessData,
       filterTypeKey:'country',
       filterTypeVal:filterTypes.locations.country

@@ -2,7 +2,7 @@ import styles from './jobsList.module.css';
 import { useJobStore } from '../../../providers/zustand';
 
 export default function JobList() {
-  const { jobs} = useJobStore();
+  const { jobs } = useJobStore();
   return (
     <div className={styles.cardGrid}>
       {jobs.map(job => (
