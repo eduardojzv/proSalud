@@ -11,10 +11,9 @@ export default function Limit() {
     const handleLimitChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const newLimit = parseInt(event.target.value, 10); // Convertir a número
 
-        // Actualizar en la URL y el store
+        // Actualizar en la URL
         searchParams.set('limit', newLimit.toString());
         setSearchParams(searchParams);
-        //setFilters({ ...filters, limit: newLimit });
     };
 
     return (

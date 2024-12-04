@@ -15,7 +15,7 @@ export default function JobList() {
             />
           </div>
           <div className={styles.card__content}>
-            <h2 className={styles.card__title}>{job.title}</h2>
+            <h2 className={styles.card__title}>{job.id}--{job.title}</h2>
             <p className={styles.card__info}><strong>Posición:</strong> {job.position}</p>
             <p className={styles.card__info}><strong>Departamento:</strong> {job.department}</p>
             <p className={styles.card__info}><strong>Nivel Profesional:</strong> {job.professional_level}</p>

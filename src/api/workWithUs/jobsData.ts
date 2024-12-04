@@ -1,6 +1,6 @@
 import { Filters, Job, Options } from "../../helpers/interfaces/workWithUs";
 const URL_API:string =import.meta.env.VITE_API_BACKEND
-console.log("URL_API",URL_API);
+//console.log("URL_API",URL_API);
 export const fetchJobsData = async ({ limit, offSet,
   //categories,
   locations }: Filters): Promise<Job> => {
@@ -13,6 +13,8 @@ export const fetchJobsData = async ({ limit, offSet,
     //...(locations.province && { province: locations.province }),
     //...(locations.canton && { canton: locations.canton }),
   });
+  console.log("fecth");
+  
   const response = await fetch(`${URL_API}/jobs/get-all-jobs?${query.toString()}`);
 
   if (!response.ok) {

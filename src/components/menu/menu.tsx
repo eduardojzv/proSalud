@@ -29,9 +29,7 @@ export default function Menu() {
                 setIsAtTop(false);
             }
         };
-
         window.addEventListener('scroll', handleScroll);
-
         // Limpieza del evento
         return () => {
             window.removeEventListener('scroll', handleScroll);

@@ -11,8 +11,6 @@ production = os.getenv('BD_URL')
 
 # Seleccionar la URL de la base de datos según el modo
 db_url = production if production else dev
-print("DB_URL =>", db_url)
-
 # Crear el engine de SQLAlchemy
 engine = create_engine(db_url)
 

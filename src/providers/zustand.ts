@@ -13,15 +13,16 @@ interface JobStore {
     setJobOffers: (location: Job['jobs']) => void;
     setFilters: (newFilters: Partial<Filters>) => void;
     totalJobs: number;
+    totalPages: number;
 }
 export const useJobStore = create<JobStore>((set, get) => ({
     jobs: [],
     totalJobs: 0,
     filters: {
         locations: {
-            country:'',
-            province:'',
-            canton:''
+            country: '',
+            province: '',
+            canton: ''
         },
         categories: [],
         limit: 5,
@@ -31,6 +32,7 @@ export const useJobStore = create<JobStore>((set, get) => ({
         offers: 0,
         vacancies: 0,
     },
+    totalPages: 0,
     setJobOffers: (jobs) => {
         set(() => {
             const totalVacancies = jobs.reduce((acc, job) => {
@@ -46,18 +48,20 @@ export const useJobStore = create<JobStore>((set, get) => ({
         });
     },
     setFilters: (newFilters: Partial<Filters>) => {
-        set((state) => {            
+        set((state) => {
             const updatedFilters = { ...state.filters, ...newFilters };
-            return { filters: updatedFilters };
+            return {
+                filters: updatedFilters,
+                totalPages: Math.ceil(state.totalJobs / state.filters.limit)
+            };
         });
     },
     setJobs: async (filters) => {
         const currentFilters = get().filters;
         const data = await fetchJobsData({ ...currentFilters, ...filters })
-        console.log("data",data);
         set((state) => {
             state.setJobOffers(data.jobs)
-            return { jobs: data.jobs,totalJobs:data.totalJobs };
+            return { jobs: data.jobs, totalJobs: data.totalJobs };
         })
     },
 }));

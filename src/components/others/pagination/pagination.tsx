@@ -14,7 +14,7 @@ const {
 } = styles;
 
 export function Pagination() {
-    const { setFilters, totalJobs, filters } = useJobStore();
+    const {totalJobs, filters,setFilters } = useJobStore();
     const [searchParams, setSearchParams] = useSearchParams();
 
     const totalPages = Math.ceil(totalJobs / filters.limit); // Calcula el total de páginas
@@ -66,11 +66,12 @@ export function Pagination() {
         if (pageNumber >= 1 && pageNumber <= totalPages) {
             searchParams.set('page', pageNumber.toString());
             setSearchParams(searchParams);
+            setFilters({ ...filters, offSet: pageNumber - 1 });
             // Actualizar el estado con el nuevo `offset` (base-0)
-            if (filters.offSet !== urlPage - 1) {
-                // Ajustar `offset` en base-0
-                setFilters({ ...filters, offSet: pageNumber - 1 });
-            }
+            // if (filters.offSet !== urlPage - 1) {
+            //     // Ajustar `offset` en base-0
+            //     setFilters({ ...filters, offSet: pageNumber - 1 });
+            // }
         }
     };
 

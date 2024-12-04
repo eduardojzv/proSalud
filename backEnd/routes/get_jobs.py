@@ -77,9 +77,8 @@ def get_jobs(
             if canton:
                 base_query = base_query.filter(Cantons.canton_name == canton)
             # Obtener el total de trabajos después de aplicar los filtros, sin paginación
-            total_jobs_query = session.query(func.count(Jobs.id)).filter(base_query.exists())
-            total_jobs = total_jobs_query.scalar()
-            print("base queru",total_jobs_query.scalar())
+            total_jobs = session.query(func.count()).select_from(base_query.subquery()).scalar()
+            print("base query",total_jobs)
             # Aplicar paginación
             paginated_query = base_query.offset(offset).limit(limit)
 

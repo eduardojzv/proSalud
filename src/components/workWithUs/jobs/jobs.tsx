@@ -66,6 +66,7 @@ export default function Jobs({ t }: Props) {
     };
 
     fetchJobs();
+    //corregir doble ejecucion ya que la primer vuelta modifica los parametros
   }, [searchParams]);
   //
   if (loading) {

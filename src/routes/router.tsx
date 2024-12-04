@@ -18,26 +18,26 @@ export const router = createBrowserRouter([
             {
                 index: true,
                 path: menuItems.items.home.href,
-                element: <Suspense fallback={<Loading/>} >
+                element: <Suspense fallback={<Loading />} >
                     <Home />
                 </Suspense>
             },
             {
                 path: menuItems.items.ourWork.href,
-                element: <Suspense fallback={<Loading/>} >
-                    <OurWork/>
+                element: <Suspense fallback={<Loading />} >
+                    <OurWork />
                 </Suspense>
             },
             {
                 path: menuItems.items.ourBrands.href,
-                element: <Suspense fallback={<Loading/>} >
-                    <OurBrands/>
+                element: <Suspense fallback={<Loading />} >
+                    <OurBrands />
                 </Suspense>
             },
             {
                 path: menuItems.items.workWithUs.href,
-                element: <Suspense fallback={<Loading/>} >
-                    <WorkWithUs/>
+                element: <Suspense fallback={<Loading />} >
+                    <WorkWithUs />
                 </Suspense>
             },
         ]

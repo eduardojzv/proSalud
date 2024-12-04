@@ -5,6 +5,8 @@ import styles from './workWithUs.module.css'
 const {workWithUs,workWithUs__banner}=styles
 export default function WorkWithUs() {
   const { t } = useTranslation('workWithUs');
+  console.log("Work With Us");
+  
   return (
     <div className={workWithUs}>
       <section className={workWithUs__banner}>
