@@ -15,7 +15,7 @@ export function ThemeProvider({children}: Props) {
       setTheme(storedTheme);
       document.documentElement.setAttribute('data-theme', storedTheme);
     } else {
-      const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark';
       setTheme(preferredTheme);
       document.documentElement.setAttribute('data-theme', preferredTheme);
     }

@@ -1,9 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { IconClose, IconDown } from '../../../icons/others/icons';
 import styles from './multiSelect.module.css';
 import { Filters, Options } from '../../../helpers/interfaces/workWithUs';
-import { useJobStore } from '../../../providers/zustand';
-import { useSearchParams } from 'react-router-dom';
+import { useHandleParamChange } from '../../../customHooks/useHandleParamChange';
 
 interface Props {
   isMulti?: boolean;
@@ -18,7 +17,7 @@ export default function MultiSelect({
   filterTypeKey,
   filterTypeVal,
 }: Props) {
-  const { setFilters, filters } = useJobStore();
+  const { handleParamChange, removeParamValue } = useHandleParamChange();
   const [selectedOptions, setSelectedOptions] = useState<Options[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -27,88 +26,43 @@ export default function MultiSelect({
   const [loading, setLoading] = useState<boolean>(true);
   const inputRef = useRef<HTMLInputElement>(null);
   const selectRef = useRef<HTMLDivElement>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
 
   const toggleOption = (option: Options) => {
-    // Obtener los valores actuales de la clave
-    const currentValues = searchParams.get(filterTypeKey)?.split(",") || [];
-
-    // Agregar el nuevo valor si no está ya presente
-    if (!currentValues.includes(option.value.toLowerCase())) {
-      currentValues.push(option.value.toLowerCase());
-    }
-
-    // Actualizar la URL
-    searchParams.set(filterTypeKey, currentValues.join(","));
-    setSearchParams(searchParams);
-
-    // Actualizar las opciones seleccionadas
-    setSelectedOptions((prevSelected) => {
-      const updatedSelectedOptions = isMulti
-        ? [...prevSelected, option]
-        : [option];
-      return updatedSelectedOptions;
-    });
-  };
-  const removeOption = (option: Options) => {
-    // Obtener los valores actuales de la clave
-    const currentValues = searchParams.get(filterTypeKey)?.split(",") || [];
-
-    // Eliminar el valor
-    const updatedValues = currentValues.filter(
-      (value) => value !== option.value.toLowerCase()
-    );
-
-    // Actualizar la URL
-    if (updatedValues.length > 0) {
-      searchParams.set(filterTypeKey, updatedValues.join(","));
-    } else {
-      searchParams.delete(filterTypeKey);
-    }
-    setSearchParams(searchParams);
-
-    // Actualizar las opciones seleccionadas
-    setSelectedOptions((prevSelected) => {
-      const updatedSelectedOptions = prevSelected.filter(
-        (item) => item.value !== option.value
+    if (!selectedOptions.some((selected) => selected.value === option.value)) {
+      setSelectedOptions((prev) =>
+        isMulti ? [...prev, option] : [option]
       );
-      return updatedSelectedOptions;
-    });
+      handleParamChange(
+        `locations.${filterTypeKey}`, // Manejo de claves anidadas
+        isMulti
+          ? [...selectedOptions.map((opt) => opt.value), option.value]
+          : option.value,
+        { isMulti }
+      );
+    }
   };
-  const closeDropdown = () => {
-    setIsOpen(false);
+
+  const removeOption = (option: Options) => {
+    const updatedSelectedOptions = selectedOptions.filter(
+      (item) => item.value !== option.value
+    );
+    setSelectedOptions(updatedSelectedOptions);
+
+    if (isMulti) {
+      removeParamValue(`locations.${filterTypeKey}`, option.value);
+    } else {
+      handleParamChange(`locations.${filterTypeKey}`, '', { isMulti });
+    }
   };
+
+  const closeDropdown = () => setIsOpen(false);
+
   const availableOptions = options.filter(
     (option) => !selectedOptions.some((selected) => selected.value === option.value)
   );
   const filteredOptions = availableOptions.filter((option) =>
     option.value.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  function handleBodyClick(event: MouseEvent) {
-    if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
-      closeDropdown();
-    }
-  }
-
-  // useEffect(() => {
-  //   const rawValues = searchParams.getAll(filterTypeKey);
-  //   if (rawValues.length > 0) {
-  //     const values = rawValues[0].split(',').filter((item) => item.trim() !== '');
-  //     setSelectedOptions(values.map((item) => ({ value: item })));
-  //     setFilters({ ...filters, [filterTypeKey]: values });
-  //   }
-  // }, []);
-  useEffect(() => {
-    const rawValues = searchParams.getAll(filterTypeKey);
-    if (rawValues.length > 0) {
-      const values = rawValues[0].split(',').filter((item) => item.trim() !== '');
-      setSelectedOptions(
-        values.map((item) => ({ value: item })) as Options[] // Ignorar error con aserción de tipo
-      );
-      setFilters({ ...filters, [filterTypeKey]: values });
-    }
-  }, []);
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -122,34 +76,23 @@ export default function MultiSelect({
       }
     };
     fetchOptions();
-    document.documentElement.addEventListener('click', handleBodyClick);
-    return () => {
-      document.documentElement.removeEventListener('click', handleBodyClick);
+
+    const handleBodyClick = (event: MouseEvent) => {
+      if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
+        closeDropdown();
+      }
     };
+
+    document.documentElement.addEventListener('click', handleBodyClick);
+    return () =>
+      document.documentElement.removeEventListener('click', handleBodyClick);
   }, []);
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      closeDropdown();
-    }
-  };
-
-  const handleControlClick = () => {
-    setIsOpen((prev) => !prev);
-    if (!isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 0);
-    }
-  };
-
   return (
-    <div
-      className={styles.multiSelectContainer}
-      onKeyDown={handleKeyDown}
-      ref={selectRef}
-    >
+    <div className={styles.multiSelectContainer} ref={selectRef}>
       <div
         className={styles.multiSelectControl}
-        onClick={handleControlClick}
+        onClick={() => setIsOpen((prev) => !prev)}
         role="combobox"
         aria-expanded={isOpen}
         tabIndex={0}
@@ -177,13 +120,7 @@ export default function MultiSelect({
           )}
         </div>
         <span className={styles.arrow}>
-          {loading ? (
-            <span>Cargando...</span>
-          ) : (
-            <IconDown
-              className={`${styles.chevron} ${isOpen ? styles.chevron__active : ''}`}
-            />
-          )}
+          {loading ? <span>Cargando...</span> : <IconDown />}
         </span>
       </div>
       {isOpen && (
