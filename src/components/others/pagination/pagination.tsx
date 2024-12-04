@@ -14,7 +14,7 @@ const {
 } = styles;
 
 export function Pagination() {
-    const {totalJobs, filters,setFilters } = useJobStore();
+    const { totalJobs, filters, setFilters, setJobs } = useJobStore();
     const [searchParams, setSearchParams] = useSearchParams();
 
     const totalPages = Math.ceil(totalJobs / filters.limit); // Calcula el total de páginas
@@ -66,15 +66,12 @@ export function Pagination() {
         if (pageNumber >= 1 && pageNumber <= totalPages) {
             searchParams.set('page', pageNumber.toString());
             setSearchParams(searchParams);
+            //actualizar filtros
             setFilters({ ...filters, offSet: pageNumber - 1 });
-            // Actualizar el estado con el nuevo `offset` (base-0)
-            // if (filters.offSet !== urlPage - 1) {
-            //     // Ajustar `offset` en base-0
-            //     setFilters({ ...filters, offSet: pageNumber - 1 });
-            // }
+            //fetch con el nuevo offSet
+            setJobs({ ...filters, offSet: pageNumber - 1 })
         }
     };
-
     return (
         <div className={pagination}>
             {/* Botón para la página anterior */}
@@ -95,9 +92,8 @@ export function Pagination() {
                     ) : (
                         <button
                             onClick={() => handlePaginate(pageNumber as number)}
-                            className={`${pagination__button} ${
-                                urlPage === pageNumber ? pagination__active : ''
-                            }`}
+                            className={`${pagination__button} ${urlPage === pageNumber ? pagination__active : ''
+                                }`}
                             aria-label={`Page ${pageNumber}`}
                             aria-current={urlPage === pageNumber ? 'page' : undefined}
                         >

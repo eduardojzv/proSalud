@@ -50,6 +50,8 @@ export const useJobStore = create<JobStore>((set, get) => ({
     setFilters: (newFilters: Partial<Filters>) => {
         set((state) => {
             const updatedFilters = { ...state.filters, ...newFilters };
+            console.log("updatedFilters",updatedFilters);
+            
             return {
                 filters: updatedFilters,
                 totalPages: Math.ceil(state.totalJobs / state.filters.limit)

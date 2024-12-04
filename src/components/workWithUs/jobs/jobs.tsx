@@ -15,11 +15,9 @@ interface Props {
 }
 export default function Jobs({ t }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { jobs, setJobs, setFilters, totalJobs, filters, jobOffers } = useJobStore();
+  const { jobs, setJobs, setFilters, jobOffers } = useJobStore();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const totalPages = Math.ceil(totalJobs / filters.limit);
-  //
   // Función para validar y ajustar el parámetro `limit`
   function validateAndSetLimit() {
     let urlLimit = parseInt(searchParams.get('limit') || '');
@@ -30,19 +28,15 @@ export default function Jobs({ t }: Props) {
     }
     return urlLimit;
   }
-  function validateAndSetPage() {
-    let urlPage: number = parseInt(searchParams.get('page') || '');
-    if (isNaN(urlPage) || urlPage < 1 || urlPage > totalPages) {
-      urlPage = 1; // Página predeterminada
-      searchParams.set('page', urlPage.toString());
-      setSearchParams(searchParams);
-    }
-    return urlPage - 1
+  function setDefaultPage() {
+    searchParams.set('page', "1");
+    setSearchParams(searchParams);
+    return 0
   }
   // Función para generar los filtros
   const generateFilters = (): Partial<Filters> => ({
     limit: validateAndSetLimit(),
-    offSet: validateAndSetPage(),
+    offSet: setDefaultPage(),
     categories: searchParams.get('categories')?.split(',') || [],
     locations: {
       country: searchParams.get('country') || '',
@@ -50,7 +44,7 @@ export default function Jobs({ t }: Props) {
       canton: searchParams.get('canton') || '',
     },
   });
-
+  //fetch inicial de jobs
   useEffect(() => {
     const fetchJobs = async () => {
       setLoading(true);
@@ -66,8 +60,7 @@ export default function Jobs({ t }: Props) {
     };
 
     fetchJobs();
-    //corregir doble ejecucion ya que la primer vuelta modifica los parametros
-  }, [searchParams]);
+  }, []);
   //
   if (loading) {
     return <div>Loading...</div>;
