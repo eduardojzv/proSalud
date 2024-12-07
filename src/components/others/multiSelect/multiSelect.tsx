@@ -29,13 +29,7 @@ export default function MultiSelect({
 
   const toggleOption = (option: Options) => {
     if (!selectedOptions.some((selected) => selected.value === option.value)) {
-      setSelectedOptions((prev) =>{
-        console.log("1)",[...prev, option],"2)",[option]);
-        
-        return isMulti ? [...prev, option] : [option]
-      }
-        
-      );
+      setSelectedOptions((prev) => isMulti ? [...prev, option] : [option]);
       //terminar de arreglar los params
       handleParamChange(
         filterTypeKey, // Manejo de claves anidadas

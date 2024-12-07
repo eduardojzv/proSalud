@@ -44,3 +44,12 @@ export const fetchPositionsData = async (): Promise<Options[]> => {
   }
   return response.json();
 };
+
+export const fetchProvinceData = async (countryID:string=""): Promise<Options[]> => {
+  const response = await fetch(`${URL_API}/location/get-provinces${countryID ? countryID :""}`);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const data = await response.json()
+  return data.provinces;
+};

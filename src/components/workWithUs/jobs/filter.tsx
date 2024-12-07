@@ -1,4 +1,4 @@
-import { fetchContriessData} from '../../../api/workWithUs/jobsData';
+import { fetchContriessData,fetchProvinceData} from '../../../api/workWithUs/jobsData';
 import { Filters, Options } from '../../../helpers/interfaces/workWithUs';
 import Limit from '../../others/limit/limit';
 import MultiSelect from '../../others/multiSelect/multiSelect';
@@ -24,17 +24,17 @@ export default function Filter() {
   const filtersOptions: FilterOption[] = [
     //primero por localizaciones
     {
-      isMulti: false,
+      isMulti: true,
       fetchDataFunc: fetchContriessData,
       filterTypeKey:'locations.country',
       filterTypeVal:filterTypes.locations.country
     },
-    // {
-    //   isMulti: false,
-    //   fetchDataFunc: fetchProvinceData,
-    //   filterTypeKey:'locations.province',
-    //   filterTypeVal:filterTypes.locations.province
-    // },
+    {
+      isMulti: false,
+      fetchDataFunc: fetchProvinceData,
+      filterTypeKey:'locations.province',
+      filterTypeVal:filterTypes.locations.province
+    },
   ];
 
   return (
