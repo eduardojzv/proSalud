@@ -9,13 +9,14 @@ import { limits } from "../../../helpers/jobList/limits";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Filters } from "../../../helpers/interfaces/workWithUs";
+import Loading from "../../others/loading/loading";
 const { jobs__container, jobs__info, jobs__filter, jobs__list } = styles
 interface Props {
   t: TFunction<"workWithUs">
 }
 export default function Jobs({ t }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { jobs, setJobs, setFilters, jobOffers } = useJobStore();
+  const { setJobs, setFilters, jobOffers } = useJobStore();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   // Función para validar y ajustar el parámetro `limit`
@@ -63,16 +64,13 @@ export default function Jobs({ t }: Props) {
   }, []);
   //
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading/>;
   }
 
   if (error) {
     return <div>Error: {error}</div>;
   }
 
-  if (jobs.length <= 0) {
-    return <div className={styles.job__no__data}>No hay datos disponibles</div>;
-  }
   return (
     <div className={jobs__container}>
       <section className={jobs__info}>

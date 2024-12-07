@@ -3,6 +3,9 @@ import { useJobStore } from '../../../providers/zustand';
 
 export default function JobList() {
   const { jobs } = useJobStore();
+  if (jobs.length <= 0) {
+    return <div className={styles.job__no__data}>No hay datos disponibles</div>;
+  }
   return (
     <div className={styles.cardGrid}>
       {jobs.map(job => (
