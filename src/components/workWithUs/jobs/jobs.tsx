@@ -39,9 +39,9 @@ export default function Jobs({ t }: Props) {
     offSet: setDefaultPage(),
     categories: searchParams.get('categories')?.split(',') || [],
     locations: {
-      country: searchParams.get('country') || '',
-      province: searchParams.get('province') || '',
-      canton: searchParams.get('canton') || '',
+      country: searchParams.getAll('country') || '',
+      province: searchParams.getAll('province') || '',
+      canton: searchParams.getAll('canton') || '',
     },
   });
   //fetch inicial de jobs

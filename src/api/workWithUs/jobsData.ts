@@ -1,19 +1,20 @@
 import { Filters, Job, Options } from "../../helpers/interfaces/workWithUs";
 const URL_API:string =import.meta.env.VITE_API_BACKEND
 console.log("URL_API",URL_API);
-export const fetchJobsData = async ({ limit, offSet,
-  //categories,
-  locations }: Filters): Promise<Job> => {
+export const fetchJobsData = async ({ limit, offSet,locations }: Filters): Promise<Job> => {
   // Construir la URL con los parámetros
-  const query = new URLSearchParams({
-    limit: limit.toString(),
-    offset: (offSet * limit).toString(),
-    //...(categories.length > 0 && { categories: categories.join(',') }),
-    ...(locations.country && { country: locations.country }),
-    //...(locations.province && { province: locations.province }),
-    //...(locations.canton && { canton: locations.canton }),
-  });
-  console.log("fecth");
+  const query=new URLSearchParams()
+  //basic params
+  query.set('limit',limit.toString())
+  query.set("offset", (offSet * limit).toString())
+  if (locations && typeof locations === "object") {
+    Object.entries(locations).forEach(([key, val]) => {
+      if (val.length>0 ) {
+        val.forEach((v) => query.append(key, v));
+      }
+    });
+  }
+  console.log("query",query.toString());
   
   const response = await fetch(`${URL_API}/jobs/get-all-jobs?${query.toString()}`);
 

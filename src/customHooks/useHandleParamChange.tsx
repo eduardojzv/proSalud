@@ -1,121 +1,179 @@
 import { useSearchParams } from "react-router-dom";
 import { useJobStore } from "../providers/zustand";
-import { Filters } from "../helpers/interfaces/workWithUs";
+import { Filters, Options } from "../helpers/interfaces/workWithUs";
 
 export function useHandleParamChange() {
-    const { filters, setJobs, setFilters } = useJobStore();
-    const [searchParams, setSearchParams] = useSearchParams();
+  const { filters, setJobs, setFilters } = useJobStore();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-    const handleParamChange = (key: string, value: any, options = { isMulti: false }) => {
-        const { isMulti } = options;
+  const handleParamChange = (key: string, value: any, options = { isMulti: false }) => {
+    const { isMulti } = options;
 
-        if (key.includes('.')) {
-            // Manejo de claves anidadas (e.g., 'locations.country')
-            const [parentKey, childKey] = key.split('.') as [keyof Filters, string];
+    if (key.includes('.')) {
+      // Manejo de claves anidadas (e.g., 'locations.country')
+      const [parentKey, childKey] = key.split('.') as [keyof Filters, keyof Filters['locations']];
 
-            // Verificar si `filters[parentKey]` es un objeto
-            const parentValue = filters[parentKey];
-            if (typeof parentValue === 'object' && parentValue !== null) {
-                const updatedNestedFilters = {
-                    ...parentValue,
-                    [childKey]: value,
-                };
+      const parentValue = filters[parentKey];
+      if (typeof parentValue === 'object' && parentValue !== null) {
+        //const currentValues = parentValue[childKey] ;
+        const currentValues = parentValue[childKey as keyof typeof parentValue] || [];
+  
+        //const [parentKey, childKey] = key.split('.') as [keyof Filters, string];
+        const updatedValues = isMulti
+          ? [...new Set([...currentValues, value])] // Agregar si no existe
+          : [value]; // Sobrescribir con un único valor
 
-                const updatedFilters = {
-                    ...filters,
-                    [parentKey]: updatedNestedFilters,
-                    offSet: 0, // Reiniciar el offset
-                };
+        const updatedNestedFilters = {
+          ...parentValue,
+          [childKey]: updatedValues,
+        };
 
-                setFilters(updatedFilters);
-                setJobs(updatedFilters);
+        const updatedFilters = {
+          ...filters,
+          [parentKey]: updatedNestedFilters,
+          offSet: 0, // Reiniciar el offset
+        };
 
-                // Actualizar la URL
-                searchParams.set(childKey, value.toString());
-                searchParams.set('page', '1');
-                setSearchParams(searchParams);
-            } else {
-                console.error(`El valor de "${parentKey}" no es un objeto válido para una clave anidada.`);
-            }
-        } else if (Array.isArray(filters[key as keyof Filters]) || isMulti) {
-            // Manejo de listas (e.g., 'categories')
-            const existingValues = searchParams.get(key)?.split(',') || [];
-            if (!existingValues.includes(value)) {
-                existingValues.push(value);
-            }
+        setFilters(updatedFilters);
+        setJobs(updatedFilters);
 
-            const updatedFilters = {
-                ...filters,
-                [key]: existingValues,
-                offSet: 0,
-            };
+        // Actualizar la URL
+        searchParams.delete(childKey); // Limpiar valores duplicados
+        updatedValues.forEach((v) => searchParams.append(childKey, v));
+        searchParams.set('page', '1');
+      } else {
+        console.error(`El valor de "${parentKey}" no es un objeto válido para una clave anidada.`);
+      }
+    } else if (Array.isArray(filters[key as keyof Filters]) || isMulti) {
+      // Manejo de listas (e.g., 'categories')
+      const currentValues = searchParams.get(key)?.split(',') || [];
+      const updatedValues = isMulti
+        ? [...new Set([...currentValues, value])] // Agregar si no existe
+        : [value]; // Sobrescribir con un único valor
 
-            setFilters(updatedFilters);
-            setJobs(updatedFilters);
+      const updatedFilters = {
+        ...filters,
+        [key]: updatedValues,
+        offSet: 0,
+      };
 
-            // Actualizar la URL
-            searchParams.set(key, existingValues.join(','));
-            searchParams.set('page', '1');
+      setFilters(updatedFilters);
+      setJobs(updatedFilters);
+
+      // Actualizar la URL
+      searchParams.delete(key);
+      updatedValues.forEach((v) => searchParams.append(key, v));
+      searchParams.set('page', '1');
+    } else {
+      // Manejo de claves simples (e.g., 'limit')
+      const updatedFilters = {
+        ...filters,
+        [key]: value,
+        offSet: 0,
+      };
+
+      setFilters(updatedFilters);
+      setJobs(updatedFilters);
+
+      // Actualizar la URL
+      searchParams.set(key, value.toString());
+      searchParams.set('page', '1');
+    }
+
+    setSearchParams(searchParams);
+  };
+
+  const removeParamValue = (key: string, value: string) => {
+    if (key.includes(".")) {
+      // Manejo de claves anidadas
+      const [parentKey, childKey] = key.split(".") as ["locations", keyof Filters["locations"]];
+      const parentValue = filters[parentKey]; // Acceso a `locations`
+    
+      if (parentValue && Array.isArray(parentValue[childKey])) {
+        // Remover el valor del array anidado
+        const updatedValues = parentValue[childKey].filter((v) => v !== value);
+    
+        // Actualizar el objeto `locations` completo
+        const updatedParent = {
+          ...parentValue, // Mantener otras propiedades intactas
+          [childKey]: updatedValues.length > 0 ? updatedValues : [], // Si está vacío, dejamos un array vacío
+        };
+    
+        // Actualizar los filtros
+        const updatedFilters = {
+          ...filters,
+          [parentKey]: updatedParent,
+        };
+    
+        setFilters(updatedFilters);
+        setJobs(updatedFilters);
+    
+        // Actualizar la URL
+        const existingValues = searchParams.getAll(childKey);
+        const updatedURLValues = existingValues.filter((v) => v !== value);
+    
+        if (updatedURLValues.length > 0) {
+          searchParams.delete(childKey);
+          updatedURLValues.forEach((val) => searchParams.append(childKey, val));
         } else {
-            // Manejo de claves simples (e.g., 'limit')
-            const updatedFilters = {
-                ...filters,
-                [key]: value,
-                offSet: 0,
-            };
+          searchParams.delete(childKey);
+        }
+    
+        setSearchParams(searchParams); // Aplicar cambios en la URL
+      } else {
+        console.error(`La clave "${childKey}" no es un array o no está definida en "locations".`);
+      }
+    } else {
+      // Manejo de claves simples como `categories`
+      const existingValues = filters[key as keyof Filters] as string[];
+      if (Array.isArray(existingValues)) {
+        // Remover el valor
+        const updatedValues = existingValues.filter((v) => v !== value);
 
-            setFilters(updatedFilters);
-            setJobs(updatedFilters);
+        setFilters({...filters,[key]: updatedValues.length > 0 ? updatedValues : []});
 
-            // Actualizar la URL
-            searchParams.set(key, value.toString());
-            searchParams.set('page', '1');
+        // Actualizar la URL
+        const existingURLValues = searchParams.getAll(key);
+        const updatedURLValues = existingURLValues.filter((v) => v !== value);
+
+        if (updatedURLValues.length > 0) {
+          searchParams.delete(key);
+          updatedURLValues.forEach((val) => searchParams.append(key, val));
+        } else {
+          searchParams.delete(key);
         }
 
-        setSearchParams(searchParams);
-    };
+        setSearchParams(searchParams); // Aplicar cambios en la URL
+      }
+    }
+  };
+  const validateURL = (key: string, isMulti: boolean): Options['value'][] | null => {
+    // Obtener todos los valores de la clave desde la URL
+    if (key.includes('.')) {
+      // Manejo de claves anidadas (e.g., 'locations.country')
+      const [_, childKey] = key.split('.') as [keyof Filters, string];
+      const existingValues = searchParams.getAll(childKey);
 
-    const removeParamValue = (key: string, value: any) => {
-        if (Array.isArray(filters[key as keyof Filters])) {
-            // Remover un valor de una lista
-            const existingValues = searchParams.get(key)?.split(',') || [];
-            const updatedValues = existingValues.filter((v) => v !== value);
+      if (existingValues.length > 0) {
+        if (isMulti) {
+          // Devolver todos los valores en un array
+          return existingValues;
+        } else {
+          const firstValue = existingValues[0]; // Tomar el primer valor
 
-            const updatedFilters = {
-                ...filters,
-                [key]: updatedValues,
-            };
+          // Limpiar valores duplicados dejando solo el primero
+          searchParams.delete(key);
+          searchParams.set(key, firstValue);
+          setSearchParams(searchParams); // Actualizar la URL
 
-            setFilters(updatedFilters);
-            setJobs(updatedFilters);
-
-            if (updatedValues.length > 0) {
-                searchParams.set(key, updatedValues.join(','));
-            } else {
-                searchParams.delete(key);
-            }
-        } else if (key.includes('.')) {
-            // Manejo de claves anidadas
-            const [parentKey, childKey] = key.split('.') as [keyof Filters, string];
-            const parentValue = filters[parentKey];
-
-            if (typeof parentValue === 'object' && parentValue !== null) {
-                const updatedNestedFilters = {
-                    ...parentValue,
-                    [childKey]: value,
-                };
-
-                setFilters({
-                    ...filters,
-                    [parentKey]: updatedNestedFilters,
-                });
-            } else {
-                console.error(`El valor de ${parentKey} no es un objeto válido.`);
-            }
+          return [firstValue]; // Devolver el primer valor como array
         }
+      }
+    }
+    // Si no hay valores en la URL para esa clave, devolver null
+    return null;
+  };
 
-        setSearchParams(searchParams);
-    };
 
-    return { handleParamChange, removeParamValue };
+  return { handleParamChange, removeParamValue, validateURL };
 }

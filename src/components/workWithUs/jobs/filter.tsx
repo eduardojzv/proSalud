@@ -1,4 +1,4 @@
-import { fetchContriessData } from '../../../api/workWithUs/jobsData';
+import { fetchContriessData} from '../../../api/workWithUs/jobsData';
 import { Filters, Options } from '../../../helpers/interfaces/workWithUs';
 import Limit from '../../others/limit/limit';
 import MultiSelect from '../../others/multiSelect/multiSelect';
@@ -10,10 +10,10 @@ export default function Filter() {
   interface FilterOption {
     isMulti: boolean;
     fetchDataFunc: () => Promise<Options[]>; // Cambiado a Promise porque probablemente fetch retorna una promesa
-    filterTypeKey: keyof Filters['locations'];
+    filterTypeKey: `locations.${keyof Filters['locations']}`;
     filterTypeVal:string;
   }
-  const filterTypes: Pick<Filters, 'locations'> = {
+  const filterTypes = {
     locations: {
       country: "País",
       province: "Provincia",
@@ -26,9 +26,15 @@ export default function Filter() {
     {
       isMulti: false,
       fetchDataFunc: fetchContriessData,
-      filterTypeKey:'country',
+      filterTypeKey:'locations.country',
       filterTypeVal:filterTypes.locations.country
     },
+    // {
+    //   isMulti: false,
+    //   fetchDataFunc: fetchProvinceData,
+    //   filterTypeKey:'locations.province',
+    //   filterTypeVal:filterTypes.locations.province
+    // },
   ];
 
   return (

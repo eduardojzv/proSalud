@@ -7,7 +7,7 @@ import { useHandleParamChange } from '../../../customHooks/useHandleParamChange'
 interface Props {
   isMulti?: boolean;
   fetchData: () => Promise<Options[]>;
-  filterTypeKey: keyof Filters['locations'] | 'categories'; // Claves de `locations` o `categories`
+  filterTypeKey: `locations.${keyof Filters['locations']}` | 'categories'; // Claves de `locations` o `categories`
   filterTypeVal: string; // Etiqueta del filtro (e.g., 'País', 'Provincia')
 }
 
@@ -17,7 +17,7 @@ export default function MultiSelect({
   filterTypeKey,
   filterTypeVal,
 }: Props) {
-  const { handleParamChange, removeParamValue } = useHandleParamChange();
+  const { handleParamChange, removeParamValue,validateURL } = useHandleParamChange();
   const [selectedOptions, setSelectedOptions] = useState<Options[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -29,14 +29,17 @@ export default function MultiSelect({
 
   const toggleOption = (option: Options) => {
     if (!selectedOptions.some((selected) => selected.value === option.value)) {
-      setSelectedOptions((prev) =>
-        isMulti ? [...prev, option] : [option]
+      setSelectedOptions((prev) =>{
+        console.log("1)",[...prev, option],"2)",[option]);
+        
+        return isMulti ? [...prev, option] : [option]
+      }
+        
       );
+      //terminar de arreglar los params
       handleParamChange(
-        `locations.${filterTypeKey}`, // Manejo de claves anidadas
-        isMulti
-          ? [...selectedOptions.map((opt) => opt.value), option.value]
-          : option.value,
+        filterTypeKey, // Manejo de claves anidadas
+        option.value,
         { isMulti }
       );
     }
@@ -47,12 +50,7 @@ export default function MultiSelect({
       (item) => item.value !== option.value
     );
     setSelectedOptions(updatedSelectedOptions);
-
-    if (isMulti) {
-      removeParamValue(`locations.${filterTypeKey}`, option.value);
-    } else {
-      handleParamChange(`locations.${filterTypeKey}`, '', { isMulti });
-    }
+    removeParamValue(filterTypeKey, option.value);
   };
 
   const closeDropdown = () => setIsOpen(false);
@@ -68,6 +66,17 @@ export default function MultiSelect({
     const fetchOptions = async () => {
       try {
         const data = await fetchData();
+        const URLParams = validateURL(filterTypeKey,isMulti);
+        if (URLParams){
+          const filteredData = data.filter((item) =>
+            Array.isArray(URLParams)
+              ? URLParams.some((param) => param.toLowerCase() === item.value.toLowerCase())
+              : null
+          );
+          if (filteredData) {
+            setSelectedOptions(filteredData)
+          }
+        }
         setOptions(data);
       } catch (err) {
         setError('Error al cargar opciones');

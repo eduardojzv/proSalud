@@ -5,9 +5,9 @@ export interface Options {
 //
 export interface Filters {
   locations: {
-    country:string,
-    province:string,
-    canton:string
+    country:string[],
+    province:string[],
+    canton:string[]
   };
   categories: string[];
   limit: number;

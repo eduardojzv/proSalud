@@ -20,9 +20,9 @@ export const useJobStore = create<JobStore>((set, get) => ({
     totalJobs: 0,
     filters: {
         locations: {
-            country: '',
-            province: '',
-            canton: ''
+            country: [],
+            province: [],
+            canton: []
         },
         categories: [],
         limit: 5,
