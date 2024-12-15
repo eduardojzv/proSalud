@@ -9,7 +9,7 @@ export default function Footer() {
     return (
         <footer className={footer__container}>
             <div className={footer__left}>
-                <img src="https://alimentosprosalud.com/wp-content/uploads/2019/06/logoProSalud_FullColor_03.png" alt="" className={logo} />
+                <img src="/proSaludLogoColor.webp" alt="" className={logo} />
                 <div className={footer__left__info}>
                     <p>{t('location')}</p>
                     <p>

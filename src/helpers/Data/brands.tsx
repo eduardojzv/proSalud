@@ -3,7 +3,7 @@ import { BrandStructure } from "../interfaces/brands";
 
 export const brandsData :BrandStructure= {
     sardimar: {
-      img: "/ourBrands/sardimar.jpg",
+      img: "/ourBrands/sardimar.webp",
       officialPage: 'https://sardimar.com/',
       social: {
         facebook: {
@@ -17,11 +17,11 @@ export const brandsData :BrandStructure= {
       }
     },
     tesoro: {
-      img: "/ourBrands/tesoroDelMar.png",
+      img: "/ourBrands/tesoroDelMar.webp",
       officialPage: 'https://sardimar.com/',
     },
     splash: {
-      img: "/ourBrands/splash.jpg",
+      img: "/ourBrands/splash.webp",
       officialPage: 'https://sardimar.com/',
       social: {
         facebook: {
@@ -35,7 +35,7 @@ export const brandsData :BrandStructure= {
       }
     },
     tonnino: {
-      img: "https://alimentosprosalud.com/wp-content/uploads/2019/07/Tonino.jpg",
+      img: "/ourBrands/tonino.webp",
       officialPage: 'https://sardimar.com/',
       social: {
         facebook: {
@@ -49,13 +49,13 @@ export const brandsData :BrandStructure= {
       }
     },
     aurora: {
-      img: "https://alimentosprosalud.com/wp-content/uploads/2019/07/aurora.jpg",
+      img: "/ourBrands/aurora.webp",
     },
     gaviota: {
-      img: "https://alimentosprosalud.com/wp-content/uploads/2019/07/Gaviota.jpg",
+      img: "/ourBrands/gaviota.webp",
     },
     bluePacific: {
-      img: "https://alimentosprosalud.com/wp-content/uploads/2019/07/bluepacific.jpg",
+      img: "/ourBrands/bluePacific.webp",
       social: {
         facebook: {
           href: "https://www.facebook.com/AtunBluePacific/",
@@ -68,7 +68,7 @@ export const brandsData :BrandStructure= {
       }
     },
     pacificoAzul: {
-      img: "https://alimentosprosalud.com/wp-content/uploads/2019/07/PacificoAzul.jpg",
+      img: "/ourBrands/pacificoAzul.webp",
       social: {
         facebook: {
           href: "https://www.facebook.com/PacificoAzulCentroamerica/",
@@ -77,7 +77,7 @@ export const brandsData :BrandStructure= {
       }
     },
     verdeMar: {
-      img: "https://alimentosprosalud.com/wp-content/uploads/2019/07/verdemar.jpg",
+      img: "/ourBrands/verdeMar.webp",
       officialPage: 'https://sardimar.com/',
       social: {
         facebook: {
@@ -91,6 +91,6 @@ export const brandsData :BrandStructure= {
       }
     },
     norte: {
-      img: "https://alimentosprosalud.com/wp-content/uploads/2019/07/DelNorte.jpg",
+      img: "/ourBrands/delNorte.webp",
     }
   }
