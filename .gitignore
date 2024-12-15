@@ -23,6 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 .venv
-.sql
-.env.production
-.env.pro
+*.sql
+*.env.production
+*.env.pro
