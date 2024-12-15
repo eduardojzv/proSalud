@@ -26,7 +26,7 @@ export default function CarrouselImgs({ data, styles, swiperConfig }: Props) {
                     Object.entries(data).map(([key, val]) => (
                         <SwiperSlide key={key} className={swiper__slide}>
                             <div className={slider__img}>
-                                <img src={val.img} alt={val.img} loading='lazy' />
+                                <img src={val.img} alt={val.img} />
                                 <div className={swiper__content}>
                                     {val.element}
                                 </div>
