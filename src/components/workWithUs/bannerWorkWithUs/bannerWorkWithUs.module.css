@@ -1,6 +1,8 @@
 .banner {
     position: relative;
     color: #ffff;
+    min-height: 200px;
+    max-height: 780px;
 }
 .banner__img{
     width: 100%;
