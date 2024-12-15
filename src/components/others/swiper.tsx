@@ -9,13 +9,13 @@ import 'swiper/css/pagination';
 // import required modules
 import { DataHomeCarrousel } from '../../helpers/interfaces/home';
 import { SwiperOptions } from 'swiper/types';
-interface Props{
-    data:DataHomeCarrousel
-    styles:CSSModuleClasses
-    swiperConfig:SwiperOptions
+interface Props {
+    data: DataHomeCarrousel
+    styles: CSSModuleClasses
+    swiperConfig: SwiperOptions
 }
-export default function CarrouselImgs({data,styles,swiperConfig}:Props) {
-    const { swiper, swiper__slide, swiper__content, slider__img} = styles
+export default function CarrouselImgs({ data, styles, swiperConfig }: Props) {
+    const { swiper, swiper__slide, swiper__content, slider__img } = styles
     return (
         <>
             <Swiper
@@ -26,7 +26,7 @@ export default function CarrouselImgs({data,styles,swiperConfig}:Props) {
                     Object.entries(data).map(([key, val]) => (
                         <SwiperSlide key={key} className={swiper__slide}>
                             <div className={slider__img}>
-                                <img src={val.img} alt={val.img}/>
+                                <img src={val.img} alt={val.img} loading='lazy' />
                                 <div className={swiper__content}>
                                     {val.element}
                                 </div>
