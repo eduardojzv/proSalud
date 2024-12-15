@@ -19,7 +19,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0;
     transition: var(--transition-opacity);
 }
 .home__certification{

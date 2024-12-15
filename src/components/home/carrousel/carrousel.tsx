@@ -48,23 +48,23 @@ export default function Carrousel({t}:Props) {
     }
     const dataHomeCarrousel: DataHomeCarrousel = {
         slide01: {
-            img: "http://alimentosprosalud.com/wp-content/uploads/2019/06/slider-home-01-overlay.jpg",
+            img: "home/homeOverlay01.webp",
             element: componentsSlides.slide01
         },
         slide02: {
-            img: "http://alimentosprosalud.com/wp-content/uploads/2019/06/slider-home-02-overlay.jpg",
+            img: "home/homeOverlay02.webp",
             element: componentsSlides.slide02
         },
         slide03: {
-            img: "http://alimentosprosalud.com/wp-content/uploads/2019/06/slider-home-03-overlay.jpg",
+            img: "home/homeOverlay03.webp",
             element: componentsSlides.slide03
         },
         slide04: {
-            img: "http://alimentosprosalud.com/wp-content/uploads/2019/06/slider-home-04-overlay.jpg",
+            img: "home/homeOverlay04.webp",
             element: componentsSlides.slide04
         },
         slide05: {
-            img: "https://alimentosprosalud.com/wp-content/uploads/2019/06/slider-home-05-overlay.jpg",
+            img: "home/homeOverlay05.webp",
             element: componentsSlides.slide05
         }
     }

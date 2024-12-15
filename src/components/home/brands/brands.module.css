@@ -6,9 +6,9 @@
     align-items: center;
     justify-content: center;
 }
-.visit{
+
+.visit {
     color: var(--light-100);
-    
     text-align: center;
     padding: 10px;
     border-radius: 20px;
@@ -16,9 +16,9 @@
     height: 100%;
     font-size: var(--text-base);
     transition: transform 0.3s;
-    background-color: var( --highlight-color);
+    background-color: var(--highlight-color);
 }
 
-.visit:hover{
+.visit:hover {
     transform: scale(1.1);
 }

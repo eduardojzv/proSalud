@@ -3,7 +3,7 @@ import { BrandStructure } from "../interfaces/brands";
 
 export const brandsData :BrandStructure= {
     sardimar: {
-      img: "https://alimentosprosalud.com/wp-content/uploads/2019/07/Sardimar.jpg",
+      img: "/ourBrands/sardimar.jpg",
       officialPage: 'https://sardimar.com/',
       social: {
         facebook: {
@@ -17,11 +17,11 @@ export const brandsData :BrandStructure= {
       }
     },
     tesoro: {
-      img: "https://alimentosprosalud.com/wp-content/uploads/2023/07/TDM-imagen-web.png",
+      img: "/ourBrands/tesoroDelMar.png",
       officialPage: 'https://sardimar.com/',
     },
     splash: {
-      img: "https://alimentosprosalud.com/wp-content/uploads/2019/07/splash.jpg",
+      img: "/ourBrands/splash.jpg",
       officialPage: 'https://sardimar.com/',
       social: {
         facebook: {

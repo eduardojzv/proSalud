@@ -19,35 +19,35 @@ export default function Brands({ t }: Props) {
   );
   const data: DataHomeCarrousel = {
     slide01: {
-      img: "https://alimentosprosalud.com/wp-content/uploads/2019/07/Sardimar.jpg",
+      img: "/ourBrands/sardimar.webp",
       element: <SlideContent url={brandsData.sardimar.officialPage || ""} />
     },
     slide02: {
-      img: "https://alimentosprosalud.com/wp-content/uploads/2019/07/PacificoAzul.jpg",
+      img: "/ourBrands/pacificoAzul.webp",
       element: <SlideContent url='#' />
     },
     slide03: {
-      img: "https://alimentosprosalud.com/wp-content/uploads/2019/07/splash.jpg",
+      img: "/ourBrands/splash.webp",
       element: <SlideContent url={brandsData.splash.officialPage || ""} />
     },
     slide04: {
-      img: "https://alimentosprosalud.com/wp-content/uploads/2019/07/Gaviota.jpg",
+      img: "/ourBrands/gaviota.webp",
       element: <SlideContent url='#' />
     },
     slide05: {
-      img: "https://alimentosprosalud.com/wp-content/uploads/2019/07/bluepacific.jpg",
+      img: "/ourBrands/bluePacific.webp",
       element: <SlideContent url='#' />
     },
     slide06: {
-      img: "https://alimentosprosalud.com/wp-content/uploads/2019/07/aurora.jpg",
+      img: "/ourBrands/aurora.webp",
       element: <SlideContent url='#' />
     },
     slide07: {
-      img: "https://alimentosprosalud.com/wp-content/uploads/2019/07/DelNorte.jpg",
+      img: "/ourBrands/delNorte.webp",
       element: <SlideContent url='#' />
     },
     slide08: {
-      img: "https://alimentosprosalud.com/wp-content/uploads/2019/07/verdemar.jpg",
+      img: "/ourBrands/verdeMar.webp",
       element: <SlideContent url='#' />
     }
   }

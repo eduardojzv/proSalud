@@ -8,7 +8,7 @@ import Achievements from "../../components/home/achievements/Achievements";
 import Manufacturing from "../../components/home/maquila/maquila";
 import useIntersectionObserver from "../../helpers/intersectionObserver/intersectionObserver";
 interface IntersectionObserverOptions extends IntersectionObserverInit { }
-const { home, home__carrousel, home__brands, home__certification,home__achievements,home__manufacturing,visible } = styles
+const { home, home__carrousel, home__brands, home__certification, home__achievements, home__manufacturing, visible } = styles
 export default function Home() {
     const { t } = useTranslation('home');
     const IntersectionOpc: IntersectionObserverOptions = { root: null, rootMargin: '-100px' }
@@ -23,23 +23,23 @@ export default function Home() {
             </section>
             <section className={`${home__brands} ${IntersectingBrands ? visible : ''}`} ref={BrandsRef}>
                 {IntersectingBrands &&
-                        <Brands t={t} />
+                    <Brands t={t} />
                 }
             </section>
             <section className={`${home__certification} ${IntersectingCertifications ? visible : ''}`} ref={CertificationsRef}>
                 {IntersectingCertifications &&
-                        <Certifications t={t} />
+                    <Certifications t={t} />
                 }
             </section>
             <section className={`${home__achievements} ${IntersectingAchievements ? visible : ''}`} ref={AchievementsRef}>
-            {IntersectingAchievements &&
-                <Achievements t={t} />
-            }
+                {IntersectingAchievements &&
+                    <Achievements t={t} />
+                }
             </section>
             <section className={`${home__manufacturing} ${IntersectingManufacturing ? visible : ''}`} ref={ManufacturingRef}>
-            {IntersectingManufacturing &&
-                <Manufacturing t={t} />
-            }
+                {IntersectingManufacturing &&
+                    <Manufacturing t={t} />
+                }
             </section>
         </div>
     )
