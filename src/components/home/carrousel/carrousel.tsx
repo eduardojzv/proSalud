@@ -38,7 +38,7 @@ export default function Carrousel({ t }: Props) {
                 <p className={`${slide01__subText} upperCase`}>{t('carrousel.slide01.text02')}</p>
             </div>
             <div className={slide01__video}>
-                <iframe loading='lazy' src="https://www.youtube.com/embed/abf9euC671k?si=8CJ7DAWu3IC33GaH" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
+                <iframe src="https://www.youtube.com/embed/abf9euC671k?si=8CJ7DAWu3IC33GaH" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
             </div>
         </div>,
         slide02: <SlideContent text={t('carrousel.slide02.text01')} language={language} otherSlides__text={otherSlides__text} slide__content={slide__content} />,
