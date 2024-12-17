@@ -1,6 +1,6 @@
 .cardGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit,300px);
+  grid-template-columns: repeat(auto-fit,minmax(250px,300px));
   gap: 20px;
   overflow-y: scroll;
   width: 95%;
@@ -19,7 +19,6 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: var(--secondary-background) 0px 3px 8px;
-
   background-color: var(--primary-background);
   transition: transform 0.3s ease;
   cursor: pointer;
@@ -31,6 +30,7 @@ transform: scale(1.05);
   width: 100%;
   height: 100%;
   object-fit: fill;
+  aspect-ratio: 9/16;
 }
 .card__imgContainer{
 width: 100%;

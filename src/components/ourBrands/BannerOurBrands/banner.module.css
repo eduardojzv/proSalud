@@ -9,6 +9,7 @@
     width: 100%;
     min-height: 350px;
     max-height: 650px;
+    aspect-ratio:16/9;
     filter: brightness(50%);
 }
 .banner__content{

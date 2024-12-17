@@ -1,4 +1,8 @@
 import { Filters, Job, Options } from "../../helpers/interfaces/workWithUs";
+// Función de utilidad para retrasar
+// const delay = (ms: number): Promise<void> => {
+//   return new Promise(resolve => setTimeout(resolve, ms));
+// };
 const URL_API:string =import.meta.env.VITE_API_BACKEND
 console.log("URL_API",URL_API);
 export const fetchJobsData = async ({ limit, offSet,locations }: Filters): Promise<Job> => {
@@ -34,6 +38,7 @@ export const fetchContriessData = async (): Promise<Options[]> => {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
   const data = await response.json()
+  // await delay(2000);
   return data.countries;
 };
 
@@ -51,5 +56,7 @@ export const fetchProvinceData = async (countryID:string=""): Promise<Options[]>
     throw new Error(`HTTP error! status: ${response.status}`);
   }
   const data = await response.json()
+  // await delay(2000);
+  // throw new Error("Simulated network error occurred!");
   return data.provinces;
 };

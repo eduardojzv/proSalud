@@ -1,7 +1,5 @@
 .multiSelectContainer {
     position: relative;
-    min-width: 200px;
-    max-width: 350px;
   }
   
   .multiSelectControl {
@@ -13,7 +11,8 @@
     border-radius: 6px;
     background-color: var(--primary-background);
     cursor: pointer;
-    min-height: 42px;
+    height: 50px;
+    width: 200px;
     transition: all 0.2s ease-in-out;
     color: var(--dark-100);
   }

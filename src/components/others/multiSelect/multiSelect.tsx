@@ -17,7 +17,7 @@ export default function MultiSelect({
   filterTypeKey,
   filterTypeVal,
 }: Props) {
-  const { handleParamChange, removeParamValue,validateURL } = useHandleParamChange();
+  const { handleParamChange, removeParamValue, validateURL } = useHandleParamChange();
   const [selectedOptions, setSelectedOptions] = useState<Options[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -60,8 +60,8 @@ export default function MultiSelect({
     const fetchOptions = async () => {
       try {
         const data = await fetchData();
-        const URLParams = validateURL(filterTypeKey,isMulti);
-        if (URLParams){
+        const URLParams = validateURL(filterTypeKey, isMulti);
+        if (URLParams) {
           const filteredData = data.filter((item) =>
             Array.isArray(URLParams)
               ? URLParams.some((param) => param.toLowerCase() === item.value.toLowerCase())
@@ -103,7 +103,11 @@ export default function MultiSelect({
         <div className={styles.selectedOptions}>
           {selectedOptions.length === 0 ? (
             <span className={styles.placeholder}>
-              {error || `Selecciona ${filterTypeVal}`}
+              {loading
+                ? <span>Cargando...</span>
+                : error
+                  ? <span>{error}</span>
+                  : <span>{`Selecciona ${filterTypeVal}`}</span>}
             </span>
           ) : (
             selectedOptions.map((option) => (
@@ -123,7 +127,7 @@ export default function MultiSelect({
           )}
         </div>
         <span className={styles.arrow}>
-          {loading ? <span>Cargando...</span> : <IconDown />}
+          {!loading && <IconDown width="15px" height="15px" />}
         </span>
       </div>
       {isOpen && (
