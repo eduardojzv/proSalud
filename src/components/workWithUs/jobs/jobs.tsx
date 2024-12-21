@@ -16,7 +16,7 @@ interface Props {
 }
 export default function Jobs({ t }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { setJobs, setFilters, jobOffers } = useJobStore();
+  const { setJobs, setFilters, jobOffers, jobs } = useJobStore();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   // Función para validar y ajustar el parámetro `limit`
@@ -64,13 +64,12 @@ export default function Jobs({ t }: Props) {
   }, []);
   //
   if (loading) {
-    return <Loading/>;
+    return <Loading />;
   }
 
   if (error) {
     return <div>Error: {error}</div>;
   }
-
   return (
     <div className={jobs__container}>
       <section className={jobs__info}>
@@ -82,8 +81,15 @@ export default function Jobs({ t }: Props) {
         <Filter />
       </section>
       <section className={jobs__list}>
-        <JobList />
-        <Pagination />
+        {
+          jobs.length > 0 ?
+            <>
+              <JobList />
+              <Pagination />
+            </>
+            : <div className={styles.job__no__data}>No hay datos disponibles</div>
+        }
+
       </section>
     </div>
   )

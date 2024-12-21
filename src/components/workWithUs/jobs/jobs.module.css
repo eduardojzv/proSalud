@@ -24,3 +24,9 @@
 .jobs__list{
     width: 100%;
 }
+.job__no__data{
+    text-align: center;
+    font-size: var(--text-lg);
+    color: var(--title-color);
+    margin-top: 20px;
+  }
