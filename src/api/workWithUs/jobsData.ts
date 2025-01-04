@@ -1,25 +1,34 @@
 import { Filters, Job, Options } from "../../helpers/interfaces/workWithUs";
+import { getJobs } from "./getJobs";
 // Función de utilidad para retrasar
 // const delay = (ms: number): Promise<void> => {
 //   return new Promise(resolve => setTimeout(resolve, ms));
 // };
-const URL_API:string =import.meta.env.VITE_API_BACKEND
-console.log("URL_API",URL_API);
-export const fetchJobsData = async ({ limit, offSet,locations }: Filters): Promise<Job> => {
+const URL_API: string = import.meta.env.VITE_API_BACKEND
+console.log("URL_API", URL_API);
+export const fetchJobsData = async ({ limit, offSet, locations }: Filters): Promise<Job> => {
   // Construir la URL con los parámetros
-  const query=new URLSearchParams()
+  const query = new URLSearchParams()
   //basic params
-  query.set('limit',limit.toString())
+  query.set('limit', limit.toString())
   query.set("offset", (offSet * limit).toString())
   if (locations && typeof locations === "object") {
     Object.entries(locations).forEach(([key, val]) => {
-      if (val.length>0 ) {
+      if (val.length > 0) {
         val.forEach((v) => query.append(key, v));
       }
     });
   }
-  console.log("query",query.toString());
-  
+  const queryParams: QueryParams = {
+    limit: 5,
+    offset: 0,
+    categories: "Technology",
+    country: ["USA"],
+    province: "California",
+  };
+
+  const test = await getJobs()
+  console.log("teseeeeeeeeet", test);
   const response = await fetch(`${URL_API}/jobs/get-all-jobs?${query.toString()}`);
 
   if (!response.ok) {
@@ -50,8 +59,8 @@ export const fetchPositionsData = async (): Promise<Options[]> => {
   return response.json();
 };
 
-export const fetchProvinceData = async (countryID:string=""): Promise<Options[]> => {
-  const response = await fetch(`${URL_API}/location/get-provinces${countryID ? countryID :""}`);
+export const fetchProvinceData = async (countryID: string = ""): Promise<Options[]> => {
+  const response = await fetch(`${URL_API}/location/get-provinces${countryID ? countryID : ""}`);
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
