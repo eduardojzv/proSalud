@@ -1,0 +1,190 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Countries {
+  id          Int         @id @default(autoincrement())
+  countryName String      @unique
+  provinces   Provinces[]
+  Jobs        Jobs[]
+}
+
+model Provinces {
+  id           Int       @id @default(autoincrement())
+  provinceName String
+  countryId    Int
+  country      Countries @relation(fields: [countryId], references: [id])
+  cantons      Cantons[]
+  Jobs         Jobs[]
+}
+
+model Cantons {
+  id         Int       @id @default(autoincrement())
+  cantonName String
+  provinceId Int
+  province   Provinces @relation(fields: [provinceId], references: [id])
+  Jobs       Jobs[]
+}
+
+model Titles {
+  id    Int    @id @default(autoincrement())
+  title String @unique
+  Jobs  Jobs[]
+}
+
+model Skills {
+  id        Int         @id @default(autoincrement())
+  skillName String      @unique
+  JobSkills JobSkills[]
+}
+
+model Competencies {
+  id              Int               @id @default(autoincrement())
+  competence      String
+  JobCompetencies JobCompetencies[]
+}
+
+model Descriptions {
+  id              Int               @id @default(autoincrement())
+  description     String
+  JobDescriptions JobDescriptions[]
+}
+
+model Requirements {
+  id              Int               @id @default(autoincrement())
+  requirement     String
+  JobRequirements JobRequirements[]
+}
+
+model Categories {
+  id            Int             @id @default(autoincrement())
+  categoryName  String          @unique
+  subcategories Subcategories[]
+  Jobs          Jobs[]
+}
+
+model Subcategories {
+  id              Int        @id @default(autoincrement())
+  subcategoryName String     @unique
+  categoryId      Int
+  category        Categories @relation(fields: [categoryId], references: [id])
+  Jobs            Jobs[]
+}
+
+model Sectors {
+  id         Int    @id @default(autoincrement())
+  sectorName String @unique
+  Jobs       Jobs[]
+}
+
+model Images {
+  id       Int    @id @default(autoincrement())
+  imageUrl String
+
+
+  listImg Jobs[] @relation("ListImage")
+  presentationImg Jobs[] @relation("PresentationImg")
+}
+
+model Departments {
+  id             Int    @id @default(autoincrement())
+  departmentName String @unique
+  Jobs           Jobs[]
+}
+
+model ProfessionalLevels {
+  id        Int    @id @default(autoincrement())
+  levelName String @unique
+  Jobs      Jobs[]
+}
+
+model Positions {
+  id           Int    @id @default(autoincrement())
+  positionName String @unique
+  Jobs         Jobs[]
+}
+
+model Jobs {
+  id                  Int     @id @default(autoincrement())
+  vacancies           Int
+  listImageId         Int?
+  presentationImgId   Int?
+  titleId             Int?
+  positionId          Int?
+  state               Boolean
+  slug                String
+  departmentId        Int?
+  professionalLevelId Int?
+  workingDay          String
+  salaryMin           Int?
+  salaryMax           Int?
+  categoryId          Int?
+  subcategoryId       Int?
+  sectorId            Int?
+  countryId           Int?
+  provinceId          Int?
+  cantonId            Int?
+
+  title             Titles?             @relation(fields: [titleId], references: [id])
+  position          Positions?          @relation(fields: [positionId], references: [id])
+  category          Categories?         @relation(fields: [categoryId], references: [id])
+  subcategory       Subcategories?      @relation(fields: [subcategoryId], references: [id])
+  sector            Sectors?            @relation(fields: [sectorId], references: [id])
+  country           Countries?          @relation(fields: [countryId], references: [id])
+  province          Provinces?          @relation(fields: [provinceId], references: [id])
+  canton            Cantons?            @relation(fields: [cantonId], references: [id])
+  department        Departments?        @relation(fields: [departmentId], references: [id])
+  professionalLevel ProfessionalLevels? @relation(fields: [professionalLevelId], references: [id])
+  listImage         Images?             @relation("ListImage", fields: [listImageId], references: [id])
+  presentationImg   Images?             @relation("PresentationImg", fields: [presentationImgId], references: [id])
+
+  jobSkills       JobSkills[]
+  jobCompetencies JobCompetencies[]
+  jobDescriptions JobDescriptions[]
+  jobRequirements JobRequirements[]
+}
+
+model JobSkills {
+  jobId   Int
+  skillId Int
+
+  job   Jobs   @relation(fields: [jobId], references: [id])
+  skill Skills @relation(fields: [skillId], references: [id])
+
+  @@id([jobId, skillId])
+}
+
+model JobCompetencies {
+  jobId        Int
+  competencyId Int
+
+  job        Jobs         @relation(fields: [jobId], references: [id])
+  competency Competencies @relation(fields: [competencyId], references: [id])
+
+  @@id([jobId, competencyId])
+}
+
+model JobDescriptions {
+  jobId         Int
+  descriptionId Int
+
+  job         Jobs         @relation(fields: [jobId], references: [id])
+  description Descriptions @relation(fields: [descriptionId], references: [id])
+
+  @@id([jobId, descriptionId])
+}
+
+model JobRequirements {
+  jobId         Int
+  requirementId Int
+
+  job         Jobs         @relation(fields: [jobId], references: [id])
+  requirement Requirements @relation(fields: [requirementId], references: [id])
+
+  @@id([jobId, requirementId])
+}
